@@ -1,3 +1,11 @@
+// class _Panel {
+//
+//     constructor() {
+//
+//     }
+//
+// }
+
 (function ($bus) {
 
     var editor = CodeMirror(document.getElementById('editor'), {

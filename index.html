@@ -52,65 +52,50 @@
     </style>
 
     <script>
-        !function(n,e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define(e):n.mitt=e()}(this,function(){function n(n){return n=n||Object.create(null),{on:function(e,t){(n[e]||(n[e]=[])).push(t)},off:function(e,t){n[e]&&n[e].splice(n[e].indexOf(t)>>>0,1)},emit:function(e,t){(n[e]||[]).slice().map(function(n){n(t)}),(n["*"]||[]).slice().map(function(n){n(e,t)})}}}return n});
+        var MicroEvent = (function () {
+            var MicroEvent	= function(){};
+            MicroEvent.prototype	= {
+                $on: function(event, fct){
+                    this._events = this._events || {};
+                    this._events[event] = this._events[event]	|| [];
+                    this._events[event].push(fct);
+                },
+                $off: function(event, fct){
+                    this._events = this._events || {};
+                    if( event in this._events === false  )	return;
+                    this._events[event].splice(this._events[event].indexOf(fct), 1);
+                },
+                $emit: function(event /* , args... */){
+                    this._events = this._events || {};
+                    if( event in this._events === false  )	return;
+                    for(var i = 0; i < this._events[event].length; i++){
+                        this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1));
+                    }
+                }
+            };
+            MicroEvent.mixin	= function(destObject){
+                var props	= ['$on', '$off', '$emit'];
+                for(var i = 0; i < props.length; i ++){
+                    if( typeof destObject === 'function' ){
+                        destObject.prototype[props[i]]	= MicroEvent.prototype[props[i]];
+                    }else{
+                        destObject[props[i]] = MicroEvent.prototype[props[i]];
+                    }
+                }
+                return destObject;
+            };
+            return MicroEvent;
+        })();
     </script>
 </head>
 <body>
 
-<script>
-    var $bus = mitt();
-
-    $bus.isSyncingEditorScroll = false;
-    $bus.isSyncingPreviewScroll = false;
-
-    $bus.on('editor', function (editor) {
-        console.log(editor);
-        window._editor = editor;
-    });
-
-    (function () {
-
-        var pages = [];
-
-        $bus.on('ready', function (page) {
-            pages.push(page);
-            if(pages.length>=2){
-                $bus.emit('init');
-            }
-        });
-
-    })();
-
-</script>
-
-<div class="base-line"></div>
-<iframe id="editor" class="panel" src="editor/editor.html" frameborder="0"></iframe>
+<!--<div class="base-line"></div>-->
+<iframe id="editor" class="panel" frameborder="0"></iframe>
 <div class="split-line"></div>
-<iframe id="preview" class="panel" src="preview/preview.html" frameborder="0"></iframe>
+<iframe id="preview" class="panel" frameborder="0"></iframe>
 
-<script src="//cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
-
-<script>
-
-    // $("#editor").hover(function(){
-    //     // $("#editor").css("background-color","yellow");
-    //     $bus.panel = 'editor';
-    //     $bus.emit('panel', 'editor');
-    // },function(){
-    //     // $("#editor").css("background-color","pink");
-    //     $bus.panel = '';
-    // });
-    //
-    // $("#preview").hover(function(){
-    //     // $("#preview").css("background-color","yellow");
-    //     $bus.panel = 'preview';
-    //     $bus.emit('panel', 'preview');
-    // },function(){
-    //     // $("#preview").css("background-color","pink");
-    //     $bus.panel = '';
-    // });
-
-</script>
+<script src="index.js"></script>
 
 </body>
 </html>

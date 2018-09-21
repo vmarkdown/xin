@@ -1,3 +1,12 @@
+class Panel {
+
+    constructor() {
+
+    }
+
+}
+
+
 (function ($bus) {
 
     window.parent._preview = document;
