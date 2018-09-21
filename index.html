@@ -44,7 +44,7 @@
         .base-line{
             width: 100%;
             height: 10px;
-            border-bottom: 1px solid rgba(221, 221, 221, 0.49);
+            border-bottom: 1px solid rgba(221, 221, 221, 0.25);
             position: absolute;
             top: 30%;
             left: 0;
@@ -78,13 +78,36 @@
 
     })();
 
-
 </script>
 
 <div class="base-line"></div>
 <iframe id="editor" class="panel" src="editor/editor.html" frameborder="0"></iframe>
 <div class="split-line"></div>
 <iframe id="preview" class="panel" src="preview/preview.html" frameborder="0"></iframe>
+
+<script src="//cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+
+<script>
+
+    $("#editor").hover(function(){
+        // $("#editor").css("background-color","yellow");
+        $bus.panel = 'editor';
+        $bus.emit('panel', 'editor');
+    },function(){
+        // $("#editor").css("background-color","pink");
+        $bus.panel = '';
+    });
+
+    $("#preview").hover(function(){
+        // $("#preview").css("background-color","yellow");
+        $bus.panel = 'preview';
+        $bus.emit('panel', 'preview');
+    },function(){
+        // $("#preview").css("background-color","pink");
+        $bus.panel = '';
+    });
+
+</script>
 
 </body>
 </html>

@@ -10,14 +10,20 @@
     });
 
     function onScrolled() {
+        // console.log('$bus.panel', $bus.panel);
+        // if($bus.panel === 'editor'){
+        //     return;
+        // }
+
         var scrollInfo = editor.getScrollInfo();
+        // console.log(scrollInfo);
         var percentage = (
             (scrollInfo.top / (scrollInfo.height - scrollInfo.clientHeight))
-        ) * 100;
+        );
         $bus.emit('editorScroll', percentage);
     }
     
-    editor.on("scroll", _.throttle(onScrolled, 200));
+    editor.on("scroll", _.throttle(onScrolled, 100));
     // editor.on("scroll", onScrolled);
 
     editor.on("change", function() {
@@ -32,8 +38,12 @@
 
     });
 
-    $bus.on('previewScroll', function () {
-        console.log('previewScroll');
+    $bus.on('previewScroll', function (percentage) {
+
+
+
+        // console.log('previewScroll', percentage);
+        editor.scrollTo(null, percentage * 762);
     });
 
 
