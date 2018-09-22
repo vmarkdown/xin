@@ -412,13 +412,13 @@ Youtube videos
 They can't be added directly but you can add an image with a link to the video like this:
 
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=YOUTUBE_VIDEO_ID_HERE
-" target="_blank"><img src="http://r1.ykimg.com/05160000521C47B96758392B52082BCA"
+" target="_blank"><img src="https://r1.ykimg.com/05160000521C47B96758392B52082BCA"
 alt="IMAGE ALT TEXT HERE" width="240" height="180" border="10" /></a>
 
 
 Or, in pure Markdown, but losing the image sizing and border:
 
-[![IMAGE ALT TEXT HERE](http://r1.ykimg.com/05160000521C47B96758392B52082BCA)](http://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
+[![IMAGE ALT TEXT HERE](https://r1.ykimg.com/05160000521C47B96758392B52082BCA)](http://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID_HERE)
 
 
 Referencing a bug by #bugID in your git commit links it to the slip. For example #1.
