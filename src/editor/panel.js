@@ -1,5 +1,5 @@
 require('./codemirror-markdown.scss');
-var md = require('./demo.md');
+
 
 function Panel() {
 
@@ -28,6 +28,10 @@ function Panel() {
 Panel.prototype.init = function () {
 
 
+};
+
+Panel.prototype.setValue = function (value) {
+    this.editor.setValue(value);
 };
 
 Panel.prototype.getValue = function () {

@@ -1,14 +1,10 @@
 require('./index.scss');
 var Event = require('../util/event');
+var md = require('../../assets/demo.md');
 
 function syncScroll(editorPanel, previewPanel) {
     var isSyncingEditorScroll = false;
     var isSyncingPreviewScroll = false;
-
-    editorPanel.$on("change", function(value) {
-        previewPanel.setValue(value);
-    });
-
     editorPanel.$on("scroll", function(percentage) {
         if(!isSyncingEditorScroll){
             isSyncingPreviewScroll = true;
@@ -26,12 +22,61 @@ function syncScroll(editorPanel, previewPanel) {
     });
 }
 
-module.exports = function init(EditorPanel, PreviewPanel) {
+module.exports = async function init(EditorPanel, PreviewPanel) {
     Event.mixin(EditorPanel);
     Event.mixin(PreviewPanel);
 
     var editorPanel = new EditorPanel();
-    var previewPanel = new PreviewPanel(editorPanel.getValue());
+    var previewPanel = new PreviewPanel();
 
     syncScroll(editorPanel, previewPanel);
+
+    //editorPanel.getValue()
+
+    var markdown = await localforage.getItem('markdown') || md;
+    editorPanel.setValue(markdown);
+    previewPanel.setValue(markdown);
+
+    var isSaved = true;
+    function onEditorChange(value) {
+        console.log('editorPanel change');
+        previewPanel.setValue(value);
+    }
+
+    function onEditorSave(value) {
+        console.log('editorPanel save');
+        localforage.setItem('markdown', value).then(function () {
+            isSaved = true;
+        });
+    }
+
+    editorPanel.$on("change",  function () {
+        isSaved = false;
+    });
+    editorPanel.$on("change",  _.debounce(onEditorChange, 300, { 'maxWait': 1000 })   );
+    editorPanel.$on("change",  _.debounce(onEditorSave, 3000, { 'maxWait': 7000 })   );
+
+    // window.onbeforeunload = function(){
+    //     // onEditorChange(editorPanel.getValue());
+    // }
+
+
+    window.onbeforeunload = function (e) {
+        if(isSaved) {
+           return;
+        }
+
+        onEditorChange(editorPanel.getValue());
+
+        var e = e || window.event;
+
+        // For IE and Firefox prior to version 4
+        if (e) {
+            e.returnValue = 'UnSaved, please wait a moment!';
+        }
+
+        // For Safari
+        return 'UnSaved, please wait a moment!';
+    };
+
 };

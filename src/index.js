@@ -1,6 +1,7 @@
 var home = require('./home/index');
 var Util = require('./util/util');
 
+
 function loaded() {
     if( panels[0] && panels[1] ){
         home(panels[0], panels[1]);

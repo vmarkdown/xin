@@ -12,9 +12,17 @@ Panel.prototype.init = function () {
 
 };
 
+
 Panel.prototype.setValue = function (markdown) {
+    if(!markdown) return;
+
+    console.time('parse');
     var html = marked(markdown);
+    console.timeEnd('parse');
+
+    console.time('render');
     document.body.innerHTML = html;
+    console.timeEnd('render');
 };
 
 Panel.prototype.getPercentage = function () {
