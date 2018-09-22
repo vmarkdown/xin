@@ -3,6 +3,7 @@ const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const production = (process.env.NODE_ENV === 'production');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 
 const config = {
