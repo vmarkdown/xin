@@ -1,4 +1,5 @@
 require('./codemirror-markdown.scss');
+var md = require('./demo.md');
 
 function Panel() {
 

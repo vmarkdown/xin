@@ -1,3 +1,5 @@
+require('./index.scss');
+
 function Panel(value) {
     var self = this;
     document.onscroll = function() {
