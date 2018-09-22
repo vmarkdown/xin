@@ -78,26 +78,26 @@ Alt-H2
 ------
 
 
-[](#h1)H1
+H1
 =========
 
-[](#h2)H2
+H2
 ---------
 
-### [](#h3)H3
+### H3
 
-#### [](#h4)H4
+#### H4
 
-##### [](#h5)H5
+##### H5
 
-###### [](#h6)H6
+###### H6
 
 Alternatively, for H1 and H2, an underline-ish style:
 
-[](#alt-h1)Alt-H1
+Alt-H1
 =================
 
-[](#alt-h2)Alt-H2
+Alt-H2
 -----------------
 
 Emphasis
@@ -387,7 +387,7 @@ Quote break.
 
 > This is a very long line that will still be quoted properly when it wraps. Oh boy let's keep writing to make sure this is long enough to actually wrap for everyone. Oh, you can _put_ **Markdown** into a blockquote.
 
-[](#inline-html-1)Inline HTML
+Inline HTML
 -----------------------------
 
 You can also use raw HTML in your Markdown, and it'll mostly work pretty well.
@@ -733,7 +733,7 @@ Readability, however, is emphasized above all else. A Markdown-formatted documen
 
 To this end, Markdown's syntax is comprised entirely of punctuation characters, which punctuation characters have been carefully chosen so as to look like what they mean. E.g., asterisks around a word actually look like \\*emphasis\\*. Markdown lists look like, well, lists. Even blockquotes look like quoted passages of text, assuming you've ever used email.
 
-### [](#inline-html-2)Inline HTML
+### Inline HTML
 
 Markdown's syntax is intended for one purpose: to be used as a format for _writing_ for the web.
 
@@ -824,7 +824,7 @@ Yes, this takes a tad more effort to create a \`<br />\`, but a simplistic "ever
 
 \\[bq\\]: #blockquote \\[l\\]: #list
 
-### [](#headers-1)Headers
+### Headers
 
 Markdown supports two styles of headers, [Setext](https://slashdot.org) and \\[atx\\] \\[2\\].
 
@@ -857,7 +857,7 @@ Optionally, you may "close" atx-style headers. This is purely cosmetic -- you ca
 ### This is an H3 ######
 
 
-### [](#blockquotes-1)Blockquotes
+### Blockquotes
 
 Markdown uses email-style \`>\` characters for blockquoting. If you're familiar with quoting passages of text in an email message, then you know how to create a blockquote in Markdown. It looks best if you hard wrap the text and put a \`>\` before every line:
 
@@ -902,7 +902,7 @@ Blockquotes can contain other Markdown elements, including headers, lists, and c
 
 Any decent text editor should make email-style quoting easy. For example, with BBEdit, you can make a selection and choose Increase Quote Level from the Text menu.
 
-### [](#lists-1)Lists
+### Lists
 
 Markdown supports ordered (numbered) and unordered (bulleted) lists.
 
@@ -1138,7 +1138,7 @@ _ _ _
 Span Elements
 -------------------------------
 
-### [](#links-1)Links
+### Links
 
 Markdown supports two style of links: _inline_ and _reference_.
 
@@ -1178,7 +1178,7 @@ This is [an example] [id] reference-style link.
 Then, anywhere in the document, you define your link label like this, on a line by itself:
 
 [id]: http://example.com/  "Optional Title Here"
-
+[imgId]: https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png  "Optional Title Here"
 
 That is:
 
@@ -1270,7 +1270,7 @@ The point of reference-style links is not that they're easier to write. The poin
 
 With Markdown's reference-style links, a source document much more closely resembles the final output, as rendered in a browser. By allowing you to move the markup-related metadata out of the paragraph, you can add links without interrupting the narrative flow of your prose.
 
-### [](#emphasis-1)Emphasis
+### Emphasis
 
 Markdown treats asterisks (\`*\`) and underscores (\`_\`) as indicators of emphasis. Text wrapped with one \`*\` or \`_\` will be wrapped with an HTML \`<em>\` tag; double \`*\`'s or \`_\`'s will be wrapped with an HTML \`<strong>\` tag. E.g., this input:
 
@@ -1365,7 +1365,7 @@ to produce:
 equivalent of <code>&amp;mdash;</code>.</p>
 
 
-### [](#images-1)Images
+### Images
 
 Admittedly, it's fairly difficult to devise a "natural" syntax for placing images into a plain text document format.
 
@@ -1373,9 +1373,9 @@ Markdown uses an image syntax that is intended to resemble the syntax for links,
 
 Inline image syntax looks like this:
 
-![Alt text](/path/to/img.jpg)
+![Alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png)
 
-![Alt text](/path/to/img.jpg "Optional title")
+![Alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Optional title")
 
 
 That is:
@@ -1386,7 +1386,7 @@ That is:
 
 Reference-style image syntax looks like this:
 
-![Alt text][id]
+![Alt text][imgId]
 
 
 Where "id" is the name of a defined image reference. Image references are defined using syntax identical to link references:
