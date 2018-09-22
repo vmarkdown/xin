@@ -3,8 +3,9 @@
   "version": "0.0.1",
   "description": "markdown editor.",
   "scripts": {
+    "dist": "NODE_ENV=production webpack -p -c webpack.config.js",
     "build": "webpack -c webpack.config.js",
-    "dev": "webpack -w --config ./examples/webpack.config.js --example preact",
+    "dev": "webpack -w -c webpack.config.js",
     "test": "mocha test/**/*.js"
   },
   "repository": {
@@ -24,8 +25,12 @@
   },
   "homepage": "https://github.com/vmarkdown/xin#readme",
   "devDependencies": {
-    "assets-webpack-plugin": "^3.9.6",
+    "clean-webpack-plugin": "^0.1.19",
+    "css-loader": "^1.0.0",
     "html-webpack-plugin": "^4.0.0-alpha.2",
+    "node-sass": "^4.9.3",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.0",
     "text-loader": "^0.0.1",
     "webpack": "^4.17.2",
     "webpack-cli": "^3.1.0",

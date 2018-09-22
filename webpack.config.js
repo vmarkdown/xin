@@ -1,12 +1,15 @@
 const path = require('path');
 const merge = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
+const production = (process.env.NODE_ENV === 'production');
+
 
 const config = {
     mode: 'none',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name].[hash].js',
+        filename: production?'[name].[hash].js':'[name].js',
         libraryTarget: "umd",
         library: "[name]"
     },
@@ -15,12 +18,26 @@ const config = {
             {
                 test: /\.md$/,
                 use: 'text-loader'
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    "style-loader",
+                    "css-loader",
+                    "sass-loader"
+                ]
             }
         ]
     },
     externals: {
     },
     plugins: [
+        new CleanWebpackPlugin(['dist/*.*']),
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+            }
+        })
     ]
 };
 

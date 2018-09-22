@@ -1,3 +1,5 @@
+require('./codemirror-markdown.scss');
+
 function Panel() {
 
     var self = this;
