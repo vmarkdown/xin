@@ -44,3 +44,5 @@ Panel.prototype.scrollTo = function (percentage) {
     var top = percentage * (scrollInfo.height - scrollInfo.clientHeight);
     this.editor.scrollTo(0, top);
 };
+
+module.exports = Panel;

@@ -42,18 +42,18 @@
 
     var panels = [null, null];
     var editorIFrame = document.getElementById('editor');
-    editorIFrame.src = "editor/editor.html";
+    editorIFrame.src = "editor.html?_t"+new Date().getTime();
     editorIFrame.onload = function () {
         var editorWindow = this.contentWindow;
-        panels[0] = editorWindow.Panel;
+        panels[0] = editorWindow.EditorPanel;
         loaded();
     };
 
     var previewIFrame = document.getElementById('preview');
-    previewIFrame.src = "preview/preview.html";
+    previewIFrame.src = "preview.html?_t"+new Date().getTime();
     previewIFrame.onload = function () {
         var previewWindow = this.contentWindow;
-        panels[1] = previewWindow.Panel;
+        panels[1] = previewWindow.PreviewPanel;
         loaded();
     };
 

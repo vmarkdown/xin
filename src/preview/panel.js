@@ -24,3 +24,5 @@ Panel.prototype.scrollTo = function (percentage) {
     var top = percentage * (document.body.clientHeight - document.documentElement.clientHeight);
     document.documentElement.scrollTop = top;
 };
+
+module.exports = Panel;

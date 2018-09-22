@@ -1,0 +1,35 @@
+{
+  "name": "xin",
+  "version": "0.0.1",
+  "description": "markdown editor.",
+  "scripts": {
+    "build": "webpack -c webpack.config.js",
+    "dev": "webpack -w --config ./examples/webpack.config.js --example preact",
+    "test": "mocha test/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vmarkdown/xin.git"
+  },
+  "keywords": [
+    "markdown",
+    "remark",
+    "vdom",
+    "editor"
+  ],
+  "author": "yucopowo@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vmarkdown/xin/issues"
+  },
+  "homepage": "https://github.com/vmarkdown/xin#readme",
+  "devDependencies": {
+    "assets-webpack-plugin": "^3.9.6",
+    "html-webpack-plugin": "^4.0.0-alpha.2",
+    "text-loader": "^0.0.1",
+    "webpack": "^4.17.2",
+    "webpack-cli": "^3.1.0",
+    "webpack-merge": "^4.1.4"
+  },
+  "dependencies": {}
+}
