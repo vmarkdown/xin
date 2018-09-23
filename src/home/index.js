@@ -60,6 +60,10 @@ module.exports = async function init(EditorPanel, PreviewPanel) {
     //     // onEditorChange(editorPanel.getValue());
     // }
 
+    previewPanel.$on("scrollToLine",  function (line) {
+        editorPanel.scrollToLine(line);
+    });
+
 
     window.onbeforeunload = function (e) {
         if(isSaved) {

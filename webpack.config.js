@@ -5,7 +5,6 @@ const webpack = require('webpack');
 const production = (process.env.NODE_ENV === 'production');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-
 const config = {
     mode: 'none',
     output: {
@@ -13,6 +12,11 @@ const config = {
         filename: production?'[name].[hash].js':'[name].js',
         libraryTarget: "umd",
         library: "[name]"
+    },
+    resolve: {
+        alias: {
+            'vmarkdown': path.resolve(__dirname, 'assets', 'vmarkdown.js'),
+        }
     },
     module: {
         rules: [
@@ -31,6 +35,11 @@ const config = {
         ]
     },
     externals: {
+        'flowchart.js': 'flowchart',
+        'highlight.js': 'hljs',
+        'katex': 'katex',
+        'mermaid': 'mermaid',
+        'underscore': '_'
     },
     plugins: [
         new CleanWebpackPlugin(['dist/*.*']),

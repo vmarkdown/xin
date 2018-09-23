@@ -220,9 +220,6 @@ Code blocks are part of the Markdown spec, but syntax highlighting isn't. Howeve
 
 Inline `code` has `back-ticks around` it.
 
-
-Inline `code` has `back-ticks around` it.
-
 Blocks of code are either fenced by lines with three back-ticks ` ``` `, or are indented with four spaces. I recommend only using the fenced code blocks -- they're easier and only they support syntax highlighting.
 
 ```javascript
@@ -240,11 +237,10 @@ No language indicated, so no syntax highlighting.
 But let's throw in a <b>tag</b>.
 ```
 
-
-var s \= "JavaScript syntax highlighting";
+var s = "JavaScript syntax highlighting";
 alert(s);
 
-s \= "Python syntax highlighting"
+s = "Python syntax highlighting"
 print s
 
 No language indicated, so no syntax highlighting in Markdown Here (varies on Github).
@@ -658,7 +654,7 @@ Markdown: Syntax
 
 **Note:** This document is itself written using Markdown; you can \[see the source for it by adding '.text' to the URL\]\[src\].
 
-\[src\]: /projects/markdown/syntax.text
+[src]: /projects/markdown/syntax.text
 
 * * *
 
@@ -764,7 +760,7 @@ When you _do_ want to insert a `<br />` break tag using Markdown, you end a line
 
 Yes, this takes a tad more effort to create a `<br />`, but a simplistic "every line break is a `<br />`" rule wouldn't work for Markdown. Markdown's email-style \[blockquoting\]\[bq\] and multi-paragraph \[list items\]\[l\] work best -- and look better -- when you format them with hard breaks.
 
-\[bq\]: #blockquote \[l\]: #list
+[bq]: #blockquote \[l\]: #list
 
 ### Headers
 
@@ -988,7 +984,7 @@ To put a code block within a list item, the code block needs to be indented _twi
 
 *   A list item with a code block:
 
-    <code goes here>
+<code goes here>
 
 
 It's worth noting that it's possible to trigger an ordered list by accident, by writing something like this:
