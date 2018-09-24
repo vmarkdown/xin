@@ -37,9 +37,19 @@ class Panel {
         document.documentElement.scrollTop = top;
     }
 
+    activeLine (line) {
+        const self = this;
+        self.preview.activeLine(line);
+    }
+
     scrollToLine (line) {
         const self = this;
         self.preview.scrollToLine(line);
+    }
+
+
+    refresh() {
+
     }
 }
 

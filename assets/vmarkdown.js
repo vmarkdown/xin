@@ -139,6 +139,21 @@ class VMarkdown {
                     root.children.forEach(function (node, i) {
                         node.properties = node.properties?node.properties:{};
                         node.properties['data-line'] = node.position.start.line;
+
+
+
+                        node.children && node.children.forEach(function (node1) {
+
+                            node1.properties = node1.properties?node1.properties:{};
+                            node1.properties['data-line'] = node1.position.start.line;
+
+
+
+
+
+                        });
+
+
                     });
                     return root;
                 }

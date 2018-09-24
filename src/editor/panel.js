@@ -34,18 +34,13 @@ class Panel {
             // var result = self.editor.coordsChar(scrollInfo);
             // console.log(editor.display.scroller.scrollTop);
 
-            var top = editor.display.scroller.scrollTop;
 
 
-            var result = self.editor.coordsChar({
-                top: top,
-                left: 0
-            }, 'local');
+            let line = self.getFirstFullDisplayLine();
 
-            var line = result.line + 1;
-            // console.log(line);
+            console.log('line:', line);
+
             self.$emit('scrollToLine', line);
-
 
         });
 
@@ -56,7 +51,35 @@ class Panel {
         });
 
 
+
         this.editor = editor;
+    }
+
+    getFirstFullDisplayLine() {
+        const self = this;
+
+        var top = self.editor.display.scroller.scrollTop; //+200;
+        var result = self.editor.coordsChar({
+            top: top,
+            left: 0
+        }, 'local');
+
+        // var line = result.line + 1;
+        // console.log(line);
+
+        let lineIndex = result.line;
+        let line = lineIndex + 1;
+
+        // console.log();
+        var currentVisibleHeight = self.editor.heightAtLine(line);
+        var currentLineHeight = self.editor.display.view[lineIndex].line.height;
+        console.log(line, currentVisibleHeight, currentLineHeight)
+
+        // if( currentVisibleHeight<currentLineHeight ) {
+        //     return line + 1;
+        // }
+
+        return line;
     }
 
     enableAutoSave(){
@@ -68,7 +91,7 @@ class Panel {
                 self.saveValue();
             }
         }
-        self.$on("change",  _.debounce(onEditorSave, 3000, { 'maxWait': 7000 })   );
+        self.$on("change",  _.debounce(onEditorSave, 2000, { 'maxWait': 7000 })   );
     }
 
     setAutoSave(autoSave){
@@ -127,6 +150,9 @@ class Panel {
         this.editor.scrollTo(null, coords.top);
     }
 
+    refresh() {
+
+    }
 }
 
 Event.mixin(Panel);

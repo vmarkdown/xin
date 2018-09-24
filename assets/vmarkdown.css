@@ -2,7 +2,7 @@
     text-align: center;
 }
 
-.list-item-checkbox{
+.list-item-checkbox[type="checkbox"]{
     margin-right: 10px;
 }
 

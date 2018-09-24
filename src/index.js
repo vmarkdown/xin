@@ -1,23 +1,30 @@
 // var home = require('./home/index');
 const Util = require('./util/util');
 
-function loadIFrame(id, src) {
-    return new Promise(function (resolve, reject) {
-        var iframe = document.getElementById(id);
-        iframe.src = src + Util._t();
-        iframe.onload = function () {
-            resolve(this.contentWindow);
-        };
+function syncScroll(editorPanel, previewPanel) {
+    var isSyncingEditorScroll = false;
+    var isSyncingPreviewScroll = false;
+    editorPanel.$on("scrollToLine", function(line) {
+        if(!isSyncingEditorScroll){
+            isSyncingPreviewScroll = true;
+            previewPanel.scrollToLine(line);
+        }
+        isSyncingEditorScroll = false;
+    });
+
+    previewPanel.$on("scrollToLine", function(line) {
+        if(!isSyncingPreviewScroll){
+            isSyncingEditorScroll = true;
+            editorPanel.scrollToLine(line);
+        }
+        isSyncingPreviewScroll = false;
     });
 }
 
 Promise.all([
-    loadIFrame('editor', 'editor.html'),
-    loadIFrame('preview', 'preview.html')
+    Util.loadIFrame('editor', 'editor.html'),
+    Util.loadIFrame('preview', 'preview.html')
 ]).then(([{editorPanel}, {previewPanel}]) => {
-    console.log(editorPanel, previewPanel);
-
-    // previewPanel.setValue(editorPanel.getValue());
 
     function onEditorChange(value) {
         console.log('[editorPanel] change');
@@ -29,24 +36,47 @@ Promise.all([
     editorPanel.loadValue().then(function (value) {
         editorPanel.setValue(value);
         editorPanel.enableAutoSave();
+
+
+
+
+        // setTimeout(()=>{
+        //     previewPanel.scrollToLine(40);
+        // }, 3000);
+
     });
-    
+
+
+    editorPanel.editor.on("beforeSelectionChange", function (cm, {ranges}) {
+
+        // console.log(ranges)
+        // previewPanel
+
+        const mi = ranges[0];
+
+        const fromLine = mi.anchor.line+1;
+        const toLine = mi.head.line+1;
+
+        console.log(fromLine, toLine)
+
+        previewPanel.activeLine(fromLine);
+    });
+
+
+
+    syncScroll(editorPanel, previewPanel);
+
 }).catch((error) => {
     console.log(error)
 });
 
-
-
 (async () => {
-
-
-
     /*
     const editorWindow = await loadIFrame('editor', 'editor.html');
     const previewWindow = await loadIFrame('preview', 'preview.html');
-
     const editorPanel = editorWindow.editorPanel;
     const previewPanel = previewWindow.previewPanel;
-
     */
+
+
 })();
