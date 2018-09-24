@@ -1,26 +1,52 @@
-var home = require('./home/index');
-var Util = require('./util/util');
+// var home = require('./home/index');
+const Util = require('./util/util');
 
-
-function loaded() {
-    if( panels[0] && panels[1] ){
-        home(panels[0], panels[1]);
-    }
+function loadIFrame(id, src) {
+    return new Promise(function (resolve, reject) {
+        var iframe = document.getElementById(id);
+        iframe.src = src + Util._t();
+        iframe.onload = function () {
+            resolve(this.contentWindow);
+        };
+    });
 }
 
-var panels = [null, null];
-var editorIFrame = document.getElementById('editor');
-editorIFrame.src = "editor.html" + Util._t();
-editorIFrame.onload = function () {
-    var editorWindow = this.contentWindow;
-    panels[0] = editorWindow.EditorPanel;
-    loaded();
-};
+Promise.all([
+    loadIFrame('editor', 'editor.html'),
+    loadIFrame('preview', 'preview.html')
+]).then(([{editorPanel}, {previewPanel}]) => {
+    console.log(editorPanel, previewPanel);
 
-var previewIFrame = document.getElementById('preview');
-previewIFrame.src = "preview.html" + Util._t();
-previewIFrame.onload = function () {
-    var previewWindow = this.contentWindow;
-    panels[1] = previewWindow.PreviewPanel;
-    loaded();
-};
+    // previewPanel.setValue(editorPanel.getValue());
+
+    function onEditorChange(value) {
+        console.log('[editorPanel] change');
+        previewPanel.setValue(value);
+    }
+
+    editorPanel.$on("change",  _.debounce(onEditorChange, 200, { 'maxWait': 500 })   );
+
+    editorPanel.loadValue().then(function (value) {
+        editorPanel.setValue(value);
+        editorPanel.enableAutoSave();
+    });
+    
+}).catch((error) => {
+    console.log(error)
+});
+
+
+
+(async () => {
+
+
+
+    /*
+    const editorWindow = await loadIFrame('editor', 'editor.html');
+    const previewWindow = await loadIFrame('preview', 'preview.html');
+
+    const editorPanel = editorWindow.editorPanel;
+    const previewPanel = previewWindow.previewPanel;
+
+    */
+})();

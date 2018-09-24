@@ -39,7 +39,8 @@ const config = {
         'highlight.js': 'hljs',
         'katex': 'katex',
         'mermaid': 'mermaid',
-        'underscore': '_'
+        'underscore': '_',
+        'vmarkdown': 'VMarkdown'
     },
     plugins: [
         new CleanWebpackPlugin(['dist/*.*']),
@@ -54,10 +55,10 @@ const config = {
 module.exports = [
     merge(config, {
         entry: {
-            editor: path.resolve(__dirname, 'src/editor/panel.js')
+            editor: path.resolve(__dirname, 'src/editor/index.js')
         },
         output: {
-            library: "EditorPanel"
+            library: "editorPanel"
         },
         externals: {
 
@@ -71,10 +72,10 @@ module.exports = [
     }),
     merge(config, {
         entry: {
-            preview: path.resolve(__dirname, 'src/preview/panel.js')
+            preview: path.resolve(__dirname, 'src/preview/index.js')
         },
         output: {
-            library: "PreviewPanel"
+            library: "previewPanel"
         },
         externals: {
 

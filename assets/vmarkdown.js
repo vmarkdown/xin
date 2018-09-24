@@ -1,12 +1,12 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("flowchart.js"), require("highlight.js"), require("katex"), require("mermaid"));
+		module.exports = factory(require("flowchart"), require("hljs"), require("katex"), require("mermaid"));
 	else if(typeof define === 'function' && define.amd)
-		define(["flowchart.js", "highlight.js", "katex", "mermaid"], factory);
+		define(["flowchart", "hljs", "katex", "mermaid"], factory);
 	else if(typeof exports === 'object')
-		exports["VMarkdown"] = factory(require("flowchart.js"), require("highlight.js"), require("katex"), require("mermaid"));
+		exports["VMarkdown"] = factory(require("flowchart"), require("hljs"), require("katex"), require("mermaid"));
 	else
-		root["VMarkdown"] = factory(root["flowchart.js"], root["highlight.js"], root["katex"], root["mermaid"]);
+		root["VMarkdown"] = factory(root["flowchart"], root["hljs"], root["katex"], root["mermaid"]);
 })(window, function(__WEBPACK_EXTERNAL_MODULE__7__, __WEBPACK_EXTERNAL_MODULE__9__, __WEBPACK_EXTERNAL_MODULE__11__, __WEBPACK_EXTERNAL_MODULE__13__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
