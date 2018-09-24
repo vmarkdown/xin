@@ -2,21 +2,41 @@ require('./index.scss');
 var Event = require('../util/event');
 var md = require('../../assets/demo.md');
 
+// function syncScroll(editorPanel, previewPanel) {
+//     var isSyncingEditorScroll = false;
+//     var isSyncingPreviewScroll = false;
+//     editorPanel.$on("scroll", function(percentage) {
+//         if(!isSyncingEditorScroll){
+//             isSyncingPreviewScroll = true;
+//             previewPanel.scrollTo(percentage);
+//         }
+//         isSyncingEditorScroll = false;
+//     });
+//
+//     previewPanel.$on("scroll", function(percentage) {
+//         if(!isSyncingPreviewScroll){
+//             isSyncingEditorScroll = true;
+//             editorPanel.scrollTo(percentage);
+//         }
+//         isSyncingPreviewScroll = false;
+//     });
+// }
+
 function syncScroll(editorPanel, previewPanel) {
     var isSyncingEditorScroll = false;
     var isSyncingPreviewScroll = false;
-    editorPanel.$on("scroll", function(percentage) {
+    editorPanel.$on("scrollToLine", function(line) {
         if(!isSyncingEditorScroll){
             isSyncingPreviewScroll = true;
-            previewPanel.scrollTo(percentage);
+            previewPanel.scrollToLine(line);
         }
         isSyncingEditorScroll = false;
     });
 
-    previewPanel.$on("scroll", function(percentage) {
+    previewPanel.$on("scrollToLine", function(line) {
         if(!isSyncingPreviewScroll){
             isSyncingEditorScroll = true;
-            editorPanel.scrollTo(percentage);
+            editorPanel.scrollToLine(line);
         }
         isSyncingPreviewScroll = false;
     });
@@ -62,13 +82,16 @@ module.exports = async function init(EditorPanel, PreviewPanel) {
     //     // onEditorChange(editorPanel.getValue());
     // }
 
-    editorPanel.$on("scrollToLine",  function (line) {
-        previewPanel.scrollToLine(line);
-    });
+    // editorPanel.$on("scrollToLine",  function (line) {
+    //     previewPanel.scrollToLine(line);
+    // });
+    //
+    // previewPanel.$on("scrollToLine",  function (line) {
+    //     editorPanel.scrollToLine(line);
+    // });
 
-    previewPanel.$on("scrollToLine",  function (line) {
-        editorPanel.scrollToLine(line);
-    });
+
+    syncScroll(editorPanel, previewPanel);
 
     // setTimeout(function () {
     //     editorPanel.scrollToLine(10);

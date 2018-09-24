@@ -7,12 +7,12 @@ const MarkdownPreview = require('./markdown-preview');
 
 class Panel {
     constructor(value) {
-        var self = this;
+        const self = this;
         self.init(value);
     }
 
     init(value) {
-        var self = this;
+        const self = this;
 
         // self.vmarkdown = new VMarkdown({
         //     h: h,
@@ -57,9 +57,8 @@ class Panel {
     }
 
     scrollToLine (line) {
-
-        console.log(line);
-
+        const self = this;
+        self.preview.scrollToLine(line);
     }
 }
 

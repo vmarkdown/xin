@@ -31,7 +31,7 @@ class Preview extends Component {
                 node: node
             };
         });
-        console.log(map);
+        // console.log(map);
         this.map = map || [];
     }
 
@@ -45,6 +45,28 @@ class Preview extends Component {
         }
 
 
+    }
+
+    findEl(line) {
+
+        for(let i=0;i<this.map.length-1;i++) {
+            let el = this.map[i];
+
+            if( el.line >= line ){
+                return el;
+            }
+        }
+
+        return null;
+    }
+
+    scrollToLine (line) {
+        // console.log(line);
+        const el = this.findEl(line);
+        // console.log(el);
+        if(el){
+            document.documentElement.scrollTop = el.top;
+        }
     }
 
     componentDidMount() {
