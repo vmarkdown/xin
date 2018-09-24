@@ -1,41 +1,71 @@
 require('./GitHub-ReadMe.scss');
 require('./index.scss');
 
-const { h, Component, render } = preact;
+const { h, render } = preact;
 
-// var mdHtml = new markdownit({
-//     html: true,
-//     linkify: true,
-//     typographer: true
-// });
-// function injectLineNumbers(tokens, idx, options, env, slf) {
-//     var line;
-//     if (tokens[idx].map && tokens[idx].level === 0) {
-//         line = tokens[idx].map[0];
-//         tokens[idx].attrJoin('class', 'line');
-//         // tokens[idx].attrJoin('class', 'step');
-//         tokens[idx].attrSet('data-line', String(line+1));
-//         // tokens[idx].attrSet('data-step', String(line+1));
-//     }
-//     return slf.renderToken(tokens, idx, options, env, slf);
-// }
-//
-// mdHtml.renderer.rules.paragraph_open
-//     = mdHtml.renderer.rules.heading_open
-//     = mdHtml.renderer.rules.bullet_list_open
-//     = mdHtml.renderer.rules.ordered_list_open
-//     = mdHtml.renderer.rules.blockquote_open
-//     = mdHtml.renderer.rules.table_open
-//     = mdHtml.renderer.rules.fence
-//     = mdHtml.renderer.rules.inline
-//     = injectLineNumbers;
+const MarkdownPreview = require('./markdown-preview');
 
+class Panel {
+    constructor(value) {
+        var self = this;
+        self.init(value);
+    }
 
+    init(value) {
+        var self = this;
 
-const renderer = require('remark-preact-renderer');
-const VMarkdown = require('vmarkdown');
+        // self.vmarkdown = new VMarkdown({
+        //     h: h,
+        //     renderer: renderer,
+        //     lineNumbers: false
+        // });
 
+        // document.onscroll = function() {
+        //     console.log(document.body.scrollTop)
+        //     self.$emit('scroll', self.getPercentage());
+        // };
 
+        self.preview = render(h(MarkdownPreview, {
+            onPreviewScroll(line) {
+                self.$emit('scrollToLine', line);
+            }
+        }), document.getElementById('preview'))._component;
+
+        self.setValue(value);
+    }
+
+    setValue (markdown = '') {
+        // if(!markdown) return;
+        const self = this;
+        // const vdom = self.vmarkdown.render(markdown);
+        // render(vdom, document.body);
+
+        self.preview.setState({
+            markdown: markdown
+        });
+
+    }
+
+    getPercentage () {
+        var percentage = document.documentElement.scrollTop / (document.body.clientHeight - document.documentElement.clientHeight);
+        return percentage;
+    }
+
+    scrollTo (percentage) {
+        var top = percentage * (document.body.clientHeight - document.documentElement.clientHeight);
+        document.documentElement.scrollTop = top;
+    }
+
+    scrollToLine (line) {
+
+        console.log(line);
+
+    }
+}
+
+module.exports = Panel;
+
+/*
 function Panel(value) {
     var self = this;
 
@@ -45,12 +75,13 @@ function Panel(value) {
         lineNumbers: false
     });
 
-    self.scrollEnable = false;
-    document.onscroll = function() {
-        if(!self.scrollEnable) return;
-        self.$emit('scroll', self.getPercentage());
-    };
+
     self.setValue(value);
+
+
+    // self.scrollEnable = false;
+
+
 
     // self.scrollEnable = true;
 
@@ -166,5 +197,4 @@ Panel.prototype.scrollTo = function (percentage) {
     var top = percentage * (document.body.clientHeight - document.documentElement.clientHeight);
     document.documentElement.scrollTop = top;
 };
-
-module.exports = Panel;
+*/

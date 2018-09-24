@@ -26,16 +26,18 @@ module.exports = async function init(EditorPanel, PreviewPanel) {
     Event.mixin(EditorPanel);
     Event.mixin(PreviewPanel);
 
-    var editorPanel = new EditorPanel();
-    var previewPanel = new PreviewPanel();
 
-    syncScroll(editorPanel, previewPanel);
+    var markdown = await localforage.getItem('markdown') || md;
+
+    var editorPanel = new EditorPanel(markdown);
+    var previewPanel = new PreviewPanel(markdown);
+
+    // syncScroll(editorPanel, previewPanel);
 
     //editorPanel.getValue()
 
-    var markdown = await localforage.getItem('markdown') || md;
-    editorPanel.setValue(markdown);
-    previewPanel.setValue(markdown);
+    // editorPanel.setValue(markdown);
+    // previewPanel.setValue(markdown);
 
     var isSaved = true;
     function onEditorChange(value) {
@@ -60,10 +62,17 @@ module.exports = async function init(EditorPanel, PreviewPanel) {
     //     // onEditorChange(editorPanel.getValue());
     // }
 
+    editorPanel.$on("scrollToLine",  function (line) {
+        previewPanel.scrollToLine(line);
+    });
+
     previewPanel.$on("scrollToLine",  function (line) {
         editorPanel.scrollToLine(line);
     });
 
+    // setTimeout(function () {
+    //     editorPanel.scrollToLine(10);
+    // }, 2000);
 
     window.onbeforeunload = function (e) {
         if(isSaved) {

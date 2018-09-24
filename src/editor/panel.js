@@ -1,63 +1,97 @@
 require('./codemirror-markdown.scss');
 
-function Panel() {
+class Panel {
+    constructor(value) {
+        var self = this;
+        self.init(value);
+    }
 
-    var self = this;
+    init(value) {
+        var self = this;
 
-    var editor = CodeMirror(document.getElementById('editor'), {
-        lineNumbers: true,
-        value: md,
-        mode:  "markdown",
-        viewportMargin: Infinity,
-        lineWrapping: true
-    });
+        var editor = CodeMirror(document.getElementById('editor'), {
+            lineNumbers: true,
+            value: value || '',
+            mode:  "markdown",
+            viewportMargin: Infinity,
+            lineWrapping: true,
+            styleActiveLine: true,
+        });
 
-    editor.on("scroll", function () {
-        self.$emit('scroll', self.getPercentage());
-    });
+        // editor.on("scroll", function () {
+        //     self.$emit('scroll', self.getPercentage());
+        // });
 
-    editor.on("change", function () {
-        self.$emit('change', self.getValue());
-    });
+        editor.on("scroll", function () {
+            // self.$emit('scroll', self.getPercentage());
+            // var scrollInfo = self.editor.getScrollInfo();
 
-    this.editor = editor;
+            // console.log(self.editor);
+            // console.log(scrollInfo);
+            // console.log(self.editor.lastLine());
 
-    // setTimeout(function () {
-    //     self.scrollToLine(100);
-    // }, 3000);
+            // var result = self.editor.coordsChar(scrollInfo);
+            // console.log(editor.display.scroller.scrollTop);
+
+            var top = editor.display.scroller.scrollTop;
+
+
+            var result = self.editor.coordsChar({
+                top: top,
+                left: 0
+            }, 'local');
+
+            var line = result.line + 1;
+            // console.log(line);
+            self.$emit('scrollToLine', line);
+
+
+        });
+
+        editor.on("change", function () {
+            self.$emit('change', self.getValue());
+        });
+
+        this.editor = editor;
+    }
+
+
+    setValue (value) {
+        this.editor.setValue(value);
+    }
+
+    getValue () {
+        return this.editor.getValue();
+    }
+
+    getPercentage () {
+        var scrollInfo = this.editor.getScrollInfo();
+        var percentage = (
+            (scrollInfo.top / (scrollInfo.height - scrollInfo.clientHeight))
+        );
+        return percentage;
+    }
+
+    scrollTo (percentage) {
+        var scrollInfo = this.editor.getScrollInfo();
+        var top = percentage * (scrollInfo.height - scrollInfo.clientHeight);
+        this.editor.scrollTo(0, top);
+    }
+
+    scrollToLine (line) {
+        // console.log(line);
+        var coords = this.editor.charCoords({line: line-1, ch: 0}, "local");
+        this.editor.scrollTo(null, coords.top);
+    }
+
+    // scrollToLine (line) {
+    //     console.log(line);
+    //     var h = this.editor.getScrollInfo().clientHeight;
+    //     var coords = this.editor.charCoords({line: line, ch: 0}, "local");
+    //     // this.editor.scrollTo(null, (coords.top + coords.bottom - h) / 2);
+    //     this.editor.scrollTo(null, (coords.top));
+    // };
+
 }
-
-Panel.prototype.init = function () {
-
-
-};
-
-Panel.prototype.setValue = function (value) {
-    this.editor.setValue(value);
-};
-
-Panel.prototype.getValue = function () {
-    return this.editor.getValue();
-};
-
-Panel.prototype.getPercentage = function () {
-    var scrollInfo = this.editor.getScrollInfo();
-    var percentage = (
-        (scrollInfo.top / (scrollInfo.height - scrollInfo.clientHeight))
-    );
-    return percentage;
-};
-
-Panel.prototype.scrollTo = function (percentage) {
-    var scrollInfo = this.editor.getScrollInfo();
-    var top = percentage * (scrollInfo.height - scrollInfo.clientHeight);
-    this.editor.scrollTo(0, top);
-};
-
-Panel.prototype.scrollToLine = function (line) {
-    var h = this.editor.getScrollInfo().clientHeight;
-    var coords = this.editor.charCoords({line: line, ch: 0}, "local");
-    this.editor.scrollTo(null, (coords.top + coords.bottom - h) / 2);
-};
 
 module.exports = Panel;

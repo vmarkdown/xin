@@ -134,15 +134,16 @@ class VMarkdown {
     constructor(options = {}) {
         const self = this;
         self.processor = vremark__WEBPACK_IMPORTED_MODULE_0___default()()
-            // .use(function () {
-            //
-            //     return function (root) {
-            //
-            //         debugger
-            //
-            //     }
-            //
-            // }, {})
+            .use(function plugin(options) {
+                return function transform(root) {
+                    root.children.forEach(function (node, i) {
+                        node.properties = node.properties?node.properties:{};
+                        node.properties['data-line'] = node.position.start.line;
+                    });
+                    return root;
+                }
+            })
+
             .use(vremark_plugin_toc__WEBPACK_IMPORTED_MODULE_6___default.a, {})
             .use(remark_breaks__WEBPACK_IMPORTED_MODULE_7___default.a)
 
