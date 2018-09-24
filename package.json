@@ -37,6 +37,6 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
-    "remark-preact-renderer": "^0.0.4"
+    "remark-preact-renderer": "^0.0.5"
   }
 }
