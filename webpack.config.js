@@ -8,7 +8,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const config = {
     mode: 'none',
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, production?'dist':'www'),
         filename: production?'[name].[hash].js':'[name].js',
         libraryTarget: "umd",
         library: "[name]"
@@ -35,21 +35,24 @@ const config = {
         ]
     },
     externals: {
-        'flowchart.js': 'flowchart',
-        'highlight.js': 'hljs',
+        'flowchart': 'flowchart',
+        'hljs': 'hljs',
         'katex': 'katex',
         'mermaid': 'mermaid',
-        'underscore': '_',
-        'vmarkdown': 'VMarkdown'
+        'underscore': '_'
     },
     plugins: [
-        new CleanWebpackPlugin(['dist/*.*']),
+        new CleanWebpackPlugin(production?['dist/*.*']:[]),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify(process.env.NODE_ENV)
             }
         })
-    ]
+    ],
+    devServer: {
+        // hotOnly: true,
+        contentBase: path.join(__dirname, "dist")
+    }
 };
 
 module.exports = [
@@ -101,5 +104,6 @@ module.exports = [
             })
         ]
     })
+
 ];
 

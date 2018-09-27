@@ -5,7 +5,7 @@
   "scripts": {
     "dist": "NODE_ENV=production webpack -p -c webpack.config.js",
     "build": "webpack -c webpack.config.js",
-    "dev": "webpack -w -c webpack.config.js",
+    "dev": "webpack-dev-server",
     "test": "mocha test/**/*.js"
   },
   "repository": {
@@ -34,7 +34,8 @@
     "text-loader": "^0.0.1",
     "webpack": "^4.17.2",
     "webpack-cli": "^3.1.0",
-    "webpack-merge": "^4.1.4"
+    "webpack-merge": "^4.1.4",
+    "webpack-dev-server": "^3.1.9"
   },
   "dependencies": {
     "remark-preact-renderer": "^0.0.5"

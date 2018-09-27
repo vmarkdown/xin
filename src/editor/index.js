@@ -1,7 +1,23 @@
-require('./codemirror-markdown.scss');
+const CodeMirrorEditor = require('../../assets/vmarkdown-codemirror-editor');
 
-const Panel = require('./panel');
-const panel = new Panel();
+const editor = new CodeMirrorEditor(document.getElementById('editor'), {
+
+});
 
 
-module.exports = panel;
+
+// editor.on('scroll', function () {
+//     console.log('scroll');
+//
+//     const line = editor.getFirstVisibleLine();
+//     console.log(line);
+// });
+
+// editor.on('cursorChange', function (cursor) {
+//     console.log('cursorChange');
+//     console.log(cursor);
+// });
+
+
+
+module.exports = editor;

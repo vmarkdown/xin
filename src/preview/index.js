@@ -1,7 +1,16 @@
-// require('./markdown.scss');
 require('./index.scss');
 
-const Panel = require('./panel');
-const panel = new Panel();
+const Preview = require('./preview.js');
+const preview = new Preview();
 
-module.exports = panel;
+// (async ()=>{
+//     let markdown ='';
+//     if(!markdown){
+//         markdown = await import('../../assets/demo.md');
+//         markdown = markdown.default;
+//     }
+//     preview.setValue(markdown);
+// })();
+
+module.exports = preview;
+
