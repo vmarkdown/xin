@@ -5,7 +5,7 @@ const { h, Component, render } = preact;
 const vmarkdown = new VMarkdown({
     h: h,
     renderer: renderer,
-    lineNumbers: false
+    lineNumbers: true
 });
 
 class MarkownPreview extends Component {
@@ -28,7 +28,6 @@ class Preview {
     constructor() {
         const self = this;
         self.preview = render(h(MarkownPreview, {
-
         }), document.getElementById('preview'))._component;
     }
 
@@ -45,7 +44,7 @@ class Preview {
     }
 
     scrollToLine(line) {
-        const el = $('[data-line='+line+']');
+        const el = $('#preview [data-line='+line+']');
         if(el && el[0]){
             el[0].scrollIntoView();
         }

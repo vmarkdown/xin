@@ -1,3 +1,4 @@
+require('../common.scss');
 const CodeMirrorEditor = require('../../assets/vmarkdown-codemirror-editor');
 
 const editor = new CodeMirrorEditor(document.getElementById('editor'), {

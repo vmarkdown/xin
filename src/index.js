@@ -48,16 +48,12 @@ Promise.all([
 ]).then(([{editorPanel}, {previewPanel}]) => {
 
     function onEditorChange(change) {
-        console.log('[editorPanel] change');
-
+        // console.log('[editorPanel] change');
         const value = editorPanel.getValue();
         previewPanel.setValue(value);
     }
 
     editorPanel.on("change",  _.debounce(onEditorChange, 200, { 'maxWait': 500 })   );
-
-
-
 
     function onEditorSave() {
         const value = editorPanel.getValue();

@@ -1,3 +1,5 @@
+require('../common.scss');
+require('../../assets/vmarkdown.css');
 require('./index.scss');
 
 const Preview = require('./preview.js');
