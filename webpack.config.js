@@ -55,7 +55,7 @@ const config = {
             'process.env': {
                 NODE_ENV: JSON.stringify(process.env.NODE_ENV)
             },
-            'VERSION': JSON.stringify(pac.version)
+            'VERSION': JSON.stringify(pac.version + ':' +new Date().getTime())
         }),
 
     ],
