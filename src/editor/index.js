@@ -39,7 +39,7 @@ function onEditorSave() {
     editor.setValue(markdown);
 
     const preview = getPreview();
-    if(!preview.getValue()){
+    if(preview && !preview.getValue()){
         previewSetValue(markdown);
     }
 
