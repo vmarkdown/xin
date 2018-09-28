@@ -22,7 +22,7 @@ const config = {
     module: {
         rules: [
             {
-                test: /\.md$/,
+                test: /\.(md|html)$/,
                 use: 'text-loader'
             },
             {
@@ -56,15 +56,17 @@ const config = {
                 NODE_ENV: JSON.stringify(process.env.NODE_ENV)
             },
             'VERSION': JSON.stringify(pac.version)
-        })
+        }),
+
     ],
     devServer: {
         // hotOnly: true,
-        contentBase: path.join(__dirname, "dist")
+        contentBase: path.join(__dirname, "www")
     }
 };
 
 module.exports = [
+
     merge(config, {
         entry: {
             editor: path.resolve(__dirname, 'src/editor/index.js')
