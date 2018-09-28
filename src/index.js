@@ -30,8 +30,6 @@
         syncScroll(editorPanel, previewPanel);
     }
 
-
-
     function loaded(type, panel) {
         panels[type] = panel;
         if(panels.hasOwnProperty('editor') && panels.hasOwnProperty('preview')){

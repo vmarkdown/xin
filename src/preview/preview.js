@@ -16,6 +16,7 @@ class MarkownPreview extends Component {
     }
 
     render({}, {markdown}) {
+        if(!markdown) return h('div', {className:'markdown-body'});
         console.time('parse');
         const vdom = vmarkdown.render(markdown);
         console.timeEnd('parse');
