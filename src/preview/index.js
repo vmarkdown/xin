@@ -14,10 +14,16 @@ const preview = new Preview();
 //     preview.setValue(markdown);
 // })();
 
-if(!preview.getValue()){
+function getEditor() {
+    if(!window.parent || !window.parent.__panels__) return null;
     const __panels__ = window.parent.__panels__;
-    if(__panels__.editor){
-        const value = __panels__.editor.getValue();
+    return __panels__.editor;
+}
+
+if(!preview.getValue()){
+    const editor = getEditor();
+    if(editor){
+        const value = editor.getValue();
         preview.setValue(value);
     }
 }
