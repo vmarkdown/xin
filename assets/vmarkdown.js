@@ -139,21 +139,6 @@ class VMarkdown {
                     root.children.forEach(function (node, i) {
                         node.properties = node.properties?node.properties:{};
                         node.properties['data-line'] = node.position.start.line;
-
-
-
-                        node.children && node.children.forEach(function (node1) {
-
-                            node1.properties = node1.properties?node1.properties:{};
-                            node1.properties['data-line'] = node1.position.start.line;
-
-
-
-
-
-                        });
-
-
                     });
                     return root;
                 }
@@ -285,7 +270,7 @@ module.exports =
 const unified = __webpack_require__(1);
 const parse = __webpack_require__(16);
 const render = __webpack_require__(88);
-const paragraphHTML2Text = __webpack_require__(93);
+const paragraphHTML2Text = __webpack_require__(94);
 
 module.exports = unified()
     .use(parse, {})
@@ -8264,9 +8249,13 @@ module.exports = function plugin(options) {
 
 
 var xtend = __webpack_require__(18);
-var Parser = __webpack_require__(91);
+var createKey = __webpack_require__(91);
+var Parser = __webpack_require__(92);
 
 function Compiler(root, file) {
+
+    createKey(root);
+
     this.root = root;
     this.file = file;
 
@@ -8282,7 +8271,7 @@ Compiler.prototype.compile = function() {
     return this.parser.parse(this.root);
 };
 
-Compiler.prototype.visitors = __webpack_require__(92);
+Compiler.prototype.visitors = __webpack_require__(93);
 
 module.exports = Compiler;
 
@@ -8298,6 +8287,54 @@ function extendProps(node, props) {
     extend(node.properties, props);
 }
 
+function hash(str) {
+    var hash = 5381, i = str.length;
+    while(i) {
+        hash = (hash * 33) ^ str.charCodeAt(--i);
+    }
+    return hash >>> 0;
+}
+
+function createKeyByNodes(nodes) {
+    if(!nodes || nodes.length===0){
+        return
+    }
+    for(var i=0;i<nodes.length;i++) {
+        var node = nodes[i];
+        createKeyByNode(node);
+    }
+}
+
+function createKeyByNode(node) {
+    extendProps(node);
+    createKeyByNodes(node.children);
+    if(node.value) {
+        node.properties.key = hash(node.value);
+    }
+    else if(node.children) {
+        var key = node.children.map(function (item) {
+            return item.properties.key;
+        }).join('-');
+        node.properties.key = hash(key);
+    }
+    else {
+        var position = node.position;
+        node.properties.key = hash(position.start.line + '-' +position.end.line);
+    }
+}
+
+function createKey(node) {
+    createKeyByNodes(node.children);
+    createKeyByNode(node);
+}
+
+module.exports = createKey;
+
+
+/***/ }),
+/* 92 */
+/***/ (function(module, exports) {
+
 function Parser(options) {
     this.options = options;
     this.h = options.h;
@@ -8309,7 +8346,6 @@ Parser.prototype.parseNodes = function(nodes, parent) {
     for(var i=0;i<nodes.length;i++){
         var node = nodes[i];
         node.parent = parent;
-        extendProps(node, {key: i});
         var tempNode = this.parseNode(node);
         tempNode && vnodes.push(tempNode);
     }
@@ -8325,10 +8361,10 @@ Parser.prototype.parseNode = function(node, parent) {
 
 Parser.prototype.parse = function(root) {
     try {
-        extendProps(root, {
+        root.properties = {
             key: 0,
             className: this.options.rootClassName || 'markdown-body'
-        });
+        };
         this.options.rootTagName && (root.tagName = this.options.rootTagName);
         return this.parseNode(root);
     }
@@ -8341,7 +8377,7 @@ Parser.prototype.parse = function(root) {
 module.exports = Parser;
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports) {
 
 /**
@@ -8411,7 +8447,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 const visit = __webpack_require__(40);
@@ -9301,6 +9337,8 @@ module.exports = function checkbox(options = {}) {
     // if(!hljs){
     //     return;
     // }
+    //            html+='<div style="border-left: 1px solid #a8a8a8;position: absolute;top: 0;left: 51px;height: 100%;"></div>';
+
 
     var lineNumbers = options.lineNumbers;
 

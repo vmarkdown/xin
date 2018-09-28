@@ -114,5 +114,6 @@ Promise.all([
     const previewPanel = previewWindow.previewPanel;
     */
 
+    console.log(VERSION);
 
 })();

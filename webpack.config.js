@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const production = (process.env.NODE_ENV === 'production');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const pac = require('./package.json');
 
 const config = {
     mode: 'none',
@@ -53,7 +54,8 @@ const config = {
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify(process.env.NODE_ENV)
-            }
+            },
+            'VERSION': JSON.stringify(pac.version)
         })
     ],
     devServer: {
