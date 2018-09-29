@@ -1,6 +1,5 @@
 # Markdown Syntax
 
-
 ## Character Formatting
 
 You should read this, it's **very important**.
