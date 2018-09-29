@@ -38,6 +38,6 @@
     "webpack-dev-server": "^3.1.9"
   },
   "dependencies": {
-    "remark-preact-renderer": "^0.0.5"
+    "remark-preact-renderer": "^0.0.6"
   }
 }
