@@ -20,13 +20,13 @@ function getEditor() {
     return __panels__.editor;
 }
 
-if(!preview.getValue()){
-    const editor = getEditor();
-    if(editor){
-        const value = editor.getValue();
-        preview.setValue(value);
-    }
-}
+// if(!preview.getValue()){
+//     const editor = getEditor();
+//     if(editor){
+//         const value = editor.getValue();
+//         preview.setValue(value);
+//     }
+// }
 
 module.exports = preview;
 

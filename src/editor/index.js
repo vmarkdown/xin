@@ -9,8 +9,10 @@ function getPreview() {
     return __panels__.preview;
 }
 
+let hasInitPreviewValue = false;
 let isSaved = true;
 function onEditorChange(change) {
+    hasInitPreviewValue = true;
     isSaved = false;
     // console.log('[editorPanel] change');
     const value = editor.getValue();
@@ -30,6 +32,24 @@ function onEditorSave() {
     });
 }
 
+function initPreviewValue() {
+
+    if(hasInitPreviewValue) {
+        return;
+    }
+
+    const preview = getPreview();
+
+    if(preview && !editor.getValue() && !preview.getValue()){
+        const value = editor.getValue();
+        previewSetValue(value);
+    }
+
+    !hasInitPreviewValue && setTimeout(()=>{
+        initPreviewValue();
+    }, 100);
+}
+
 (async()=>{
     let markdown = await localforage.getItem('markdown');
     if(!markdown){
@@ -38,10 +58,7 @@ function onEditorSave() {
     }
     editor.setValue(markdown);
 
-    const preview = getPreview();
-    if(preview && !preview.getValue()){
-        previewSetValue(markdown);
-    }
+    initPreviewValue();
 
     editor.on("change",  _.debounce(onEditorChange, 100, { 'maxWait': 500 })   );
     editor.on('change', _.debounce(onEditorSave, 3000, { 'maxWait': 7000 }));
