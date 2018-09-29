@@ -20,6 +20,7 @@ function onEditorChange(change) {
 }
 
 function previewSetValue(value) {
+    hasInitPreviewValue = true;
     const preview = getPreview();
     preview && preview.setValue(value);
 }
@@ -40,7 +41,7 @@ function initPreviewValue() {
 
     const preview = getPreview();
 
-    if(preview && !editor.getValue() && !preview.getValue()){
+    if(preview && editor.getValue() && !preview.getValue()){
         const value = editor.getValue();
         previewSetValue(value);
     }
