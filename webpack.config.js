@@ -55,7 +55,8 @@ const config = {
             'process.env': {
                 NODE_ENV: JSON.stringify(process.env.NODE_ENV)
             },
-            'VERSION': JSON.stringify(pac.version + ':' +new Date())
+            'VERSION': JSON.stringify(pac.version)
+            // 'VERSION': JSON.stringify(pac.version + ':' +new Date())
         }),
 
     ],
@@ -80,7 +81,13 @@ module.exports = [
         plugins: [
             new HtmlWebpackPlugin({
                 filename: 'editor.html',
-                template: 'src/editor/editor.html'
+                template: 'src/editor/editor.html',
+                minify: {
+                    minifyCSS: true,
+                    minifyJS: true,
+                    collapseWhitespace: true,
+                    removeComments: true
+                }
             })
         ]
     }),
@@ -97,7 +104,13 @@ module.exports = [
         plugins: [
             new HtmlWebpackPlugin({
                 filename: 'preview.html',
-                template: 'src/preview/preview.html'
+                template: 'src/preview/preview.html',
+                minify: {
+                    minifyCSS: true,
+                    minifyJS: true,
+                    collapseWhitespace: true,
+                    removeComments: true
+                }
             })
         ]
     }),
@@ -111,7 +124,13 @@ module.exports = [
         plugins: [
             new HtmlWebpackPlugin({
                 filename: 'index.html',
-                template: 'src/index.html'
+                template: 'src/index.html',
+                minify: {
+                    minifyCSS: true,
+                    minifyJS: true,
+                    collapseWhitespace: true,
+                    removeComments: true
+                }
             })
         ]
     })
