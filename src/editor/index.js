@@ -61,7 +61,7 @@ function initPreviewValue() {
 
     initPreviewValue();
 
-    editor.on("change",  _.debounce(onEditorChange, 100, { 'maxWait': 500 })   );
+    editor.on("change",  _.debounce(onEditorChange, 500, { 'maxWait': 3000 })   );
     editor.on('change', _.debounce(onEditorSave, 3000, { 'maxWait': 7000 }));
 })();
 
