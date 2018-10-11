@@ -1,5 +1,5 @@
 require('../common.scss');
-const CodeMirrorEditor = require('../../assets/vmarkdown-codemirror-editor');
+const CodeMirrorEditor = require('../lib/vmarkdown-codemirror-editor.common');
 
 const editor = new CodeMirrorEditor(document.getElementById('editor'), {
 });
@@ -11,18 +11,23 @@ function getPreview() {
 
 let hasInitPreviewValue = false;
 let isSaved = true;
-function onEditorChange(change) {
+function onEditorChange(incremental) {
+
+
+    // console.log(incremental);
+
+
     hasInitPreviewValue = true;
     isSaved = false;
     // console.log('[editorPanel] change');
     const value = editor.getValue();
-    previewSetValue(value);
+    previewSetValue(value, incremental);
 }
 
-function previewSetValue(value) {
+function previewSetValue(value, incremental) {
     hasInitPreviewValue = true;
     const preview = getPreview();
-    preview && preview.setValue(value);
+    preview && preview.setValue(value, incremental);
 }
 
 function onEditorSave() {
@@ -54,14 +59,14 @@ function initPreviewValue() {
 (async()=>{
     let markdown = await localforage.getItem('markdown');
     if(!markdown){
-        markdown = await import('../../assets/github.md');
+        markdown = await import('../../assets/large.md');
         markdown = markdown.default;
     }
     editor.setValue(markdown);
 
     initPreviewValue();
 
-    editor.on("change",  _.debounce(onEditorChange, 500, { 'maxWait': 3000 })   );
+    editor.on("incremental",  _.debounce(onEditorChange, 500, { 'maxWait': 7000 })   );
     editor.on('change', _.debounce(onEditorSave, 3000, { 'maxWait': 7000 }));
 })();
 
@@ -77,17 +82,21 @@ function initPreviewValue() {
 //     console.log(cursor);
 // });
 
-window.onbeforeunload = function (e) {
-    if(isSaved) {
-        return;
-    }
-    onEditorSave();
-    var e = e || window.event;
-    if (e) {
-        e.returnValue = 'UnSaved, please wait a moment!';
-    }
-    return 'UnSaved, please wait a moment!';
-};
+if( process.env.NODE_ENV === 'production' ){
+    window.onbeforeunload = function (e) {
+        if(isSaved) {
+            return;
+        }
+        onEditorSave();
+        var e = e || window.event;
+        if (e) {
+            e.returnValue = 'UnSaved, please wait a moment!';
+        }
+        return 'UnSaved, please wait a moment!';
+    };
+
+}
+
 
 
 module.exports = editor;

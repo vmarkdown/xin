@@ -62,6 +62,8 @@ const config = {
     ],
     devServer: {
         // hotOnly: true,
+        inline: false,
+        hot: false,
         contentBase: path.join(__dirname, "www")
     }
 };

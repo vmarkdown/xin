@@ -39,6 +39,7 @@
     "webpack-merge": "^4.1.4"
   },
   "dependencies": {
-    "remark-preact-renderer": "^0.0.6"
+    "remark-preact-renderer": "^0.0.6",
+    "unist-find-node": "^1.1.2"
   }
 }
