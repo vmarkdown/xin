@@ -6,6 +6,13 @@ const production = (process.env.NODE_ENV === 'production');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const pac = require('./package.json');
 
+const minify = production? {
+    minifyCSS: true,
+    minifyJS: true,
+    collapseWhitespace: true,
+    removeComments: true
+}: false;
+
 const config = {
     mode: 'none',
     output: {
@@ -16,13 +23,18 @@ const config = {
     },
     resolve: {
         alias: {
-            'vmarkdown': path.resolve(__dirname, 'assets', 'vmarkdown.js'),
+            'vmarkdown': path.resolve(__dirname, 'src/lib', 'vmarkdown.js'),
+            'lowlight': path.resolve(__dirname, 'src/lib', 'lowlight.js'),
         }
     },
     module: {
         rules: [
             {
-                test: /\.(md|html)$/,
+                test: /\.html$/,
+                use: 'html-loader'
+            },
+            {
+                test: /\.md$/,
                 use: 'text-loader'
             },
             {
@@ -44,7 +56,6 @@ const config = {
     },
     externals: {
         'flowchart': 'flowchart',
-        'hljs': 'hljs',
         'katex': 'katex',
         'mermaid': 'mermaid',
         'underscore': '_'
@@ -62,18 +73,24 @@ const config = {
     ],
     devServer: {
         // hotOnly: true,
+        hot: false,
+        inline: false,
         contentBase: path.join(__dirname, "www")
     }
 };
 
 module.exports = [
 
+
+
+
+
     merge(config, {
         entry: {
             editor: path.resolve(__dirname, 'src/editor/index.js')
         },
         output: {
-            library: "editorPanel"
+            // library: "editorPanel"
         },
         externals: {
 
@@ -81,22 +98,21 @@ module.exports = [
         plugins: [
             new HtmlWebpackPlugin({
                 filename: 'editor.html',
-                template: 'src/editor/editor.html',
-                minify: {
-                    minifyCSS: true,
-                    minifyJS: true,
-                    collapseWhitespace: true,
-                    removeComments: true
+                template: 'src/editor/index.ejs',
+                minify: minify,
+                templateParameters: {
+                    production: production
                 }
             })
         ]
     }),
+
     merge(config, {
         entry: {
             preview: path.resolve(__dirname, 'src/preview/index.js')
         },
         output: {
-            library: "previewPanel"
+            // library: "previewPanel"
         },
         externals: {
 
@@ -104,19 +120,18 @@ module.exports = [
         plugins: [
             new HtmlWebpackPlugin({
                 filename: 'preview.html',
-                template: 'src/preview/preview.html',
-                minify: {
-                    minifyCSS: true,
-                    minifyJS: true,
-                    collapseWhitespace: true,
-                    removeComments: true
+                template: 'src/preview/index.ejs',
+                minify: minify,
+                templateParameters: {
+                    production: production
                 }
             })
         ]
     }),
+
     merge(config, {
         entry: {
-            main: path.resolve(__dirname, 'src/index.js')
+            main: path.resolve(__dirname, 'src/main/index.js')
         },
         externals: {
 
@@ -124,12 +139,10 @@ module.exports = [
         plugins: [
             new HtmlWebpackPlugin({
                 filename: 'index.html',
-                template: 'src/index.html',
-                minify: {
-                    minifyCSS: true,
-                    minifyJS: true,
-                    collapseWhitespace: true,
-                    removeComments: true
+                template: 'src/index.ejs',
+                minify: minify,
+                templateParameters: {
+                    production: production
                 }
             })
         ]

@@ -1,93 +1,56 @@
-require('../common.scss');
-const CodeMirrorEditor = require('../../assets/vmarkdown-codemirror-editor');
+require('../lib/vmarkdown-codemirror-editor.css');
+require('./index.scss');
+
+const CodeMirrorEditor = require('../lib/vmarkdown-codemirror-editor.js');
+
+const vmarkdown = window.top.__markdown__;
+
+// const vmarkdown = require('./vmarkdown');
+// const vmarkdown = new VMarkDown({
+//
+// });
+//
+// vmarkdown.on('change', function (value) {
+//     localStorage.setItem("change", value);
+// });
+//
+// vmarkdown.on('cursorChange', function (cursor) {
+//     localStorage.setItem("cursorChange", JSON.stringify(cursor));
+// });
+//
+// vmarkdown.on('firstVisibleLineChange', function (firstVisibleLine) {
+//     localStorage.setItem("firstVisibleLineChange", firstVisibleLine);
+// });
+
+
 
 const editor = new CodeMirrorEditor(document.getElementById('editor'), {
+    lineNumbers: false
 });
 
-function getPreview() {
-    const __panels__ = window.parent.__panels__;
-    return __panels__.preview;
+editor.on('cursorChange', function (cursor) {
+    vmarkdown.emit('cursorChange', cursor);
+    // localStorage.setItem("cursorChange", JSON.stringify(cursor));
+});
+
+function onScroll() {
+    const firstVisibleLine = editor.getFirstVisibleLine();
+    vmarkdown.emit('firstVisibleLineChange', firstVisibleLine);
+    // localStorage.setItem("firstVisibleLineChange", firstVisibleLine);
 }
 
-let hasInitPreviewValue = false;
-let isSaved = true;
-function onEditorChange(change) {
-    hasInitPreviewValue = true;
-    isSaved = false;
-    // console.log('[editorPanel] change');
+editor.on('scroll', _.throttle(onScroll, 300));
+
+function onChange() {
     const value = editor.getValue();
-    previewSetValue(value);
+    vmarkdown.setValue(value);
+    // localStorage.setItem("change", value);
 }
 
-function previewSetValue(value) {
-    hasInitPreviewValue = true;
-    const preview = getPreview();
-    preview && preview.setValue(value);
-}
+editor.on('change', _.debounce(onChange, 500, {maxWait: 20*1000}));
 
-function onEditorSave() {
-    const value = editor.getValue();
-    localforage.setItem('markdown', value).then(function () {
-        isSaved = true;
-        console.log('[editorPanel] data has been successfully saved');
-    });
-}
+// const md = require('../md/demo.md');
+// editor.setValue('# h1');
 
-function initPreviewValue() {
-
-    if(hasInitPreviewValue) {
-        return;
-    }
-
-    const preview = getPreview();
-
-    if(preview && editor.getValue() && !preview.getValue()){
-        const value = editor.getValue();
-        previewSetValue(value);
-    }
-
-    !hasInitPreviewValue && setTimeout(()=>{
-        initPreviewValue();
-    }, 100);
-}
-
-(async()=>{
-    let markdown = await localforage.getItem('markdown');
-    if(!markdown){
-        markdown = await import('../../assets/github.md');
-        markdown = markdown.default;
-    }
-    editor.setValue(markdown);
-
-    initPreviewValue();
-
-    editor.on("change",  _.debounce(onEditorChange, 100, { 'maxWait': 500 })   );
-    editor.on('change', _.debounce(onEditorSave, 3000, { 'maxWait': 7000 }));
-})();
-
-// editor.on('scroll', function () {
-//     console.log('scroll');
-//
-//     const line = editor.getFirstVisibleLine();
-//     console.log(line);
-// });
-
-// editor.on('cursorChange', function (cursor) {
-//     console.log('cursorChange');
-//     console.log(cursor);
-// });
-
-window.onbeforeunload = function (e) {
-    if(isSaved) {
-        return;
-    }
-    onEditorSave();
-    var e = e || window.event;
-    if (e) {
-        e.returnValue = 'UnSaved, please wait a moment!';
-    }
-    return 'UnSaved, please wait a moment!';
-};
-
-
-module.exports = editor;
+const md = require('../lib/github.md');
+editor.setValue(md);

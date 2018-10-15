@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>xin markdown editor</title>
+
+</head>
+<body>
+
+<!--<div class="base-line"></div>-->
+<iframe id="editor" class="panel" frameborder="0"></iframe>
+<!--<div class="split-line"></div>-->
+<iframe id="preview" class="panel" frameborder="0"></iframe>
+
+<!-- katex -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0-alpha/katex.min.js"></script>
+
+<% if(production){ %>
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?4541251b6af03bc203fd47f1d8a74f70";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+<% } %>
+
+</body>
+</html>

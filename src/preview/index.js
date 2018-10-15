@@ -1,32 +1,31 @@
-require('../common.scss');
-require('../../assets/vmarkdown.css');
+require('../lib/vmarkdown-preview.css');
 require('./index.scss');
 
-const Preview = require('./preview.js');
-const preview = new Preview();
+const vmarkdown = window.top.__markdown__;
 
-// (async ()=>{
-//     let markdown ='';
-//     if(!markdown){
-//         markdown = await import('../../assets/demo.md');
-//         markdown = markdown.default;
-//     }
-//     preview.setValue(markdown);
-// })();
+const VMarkDownPreview = require('../lib/vmarkdown-preview.js');
 
-function getEditor() {
-    if(!window.parent || !window.parent.__panels__) return null;
-    const __panels__ = window.parent.__panels__;
-    return __panels__.editor;
-}
+const preview = new VMarkDownPreview({
+});
 
-// if(!preview.getValue()){
-//     const editor = getEditor();
-//     if(editor){
-//         const value = editor.getValue();
-//         preview.setValue(value);
-//     }
-// }
+const app = new Vue({
+    el: '#app',
+    render(h) {
+        return vmarkdown.compile(h);
+    }
+});
 
-module.exports = preview;
+vmarkdown.on('change', function (value) {
+    app.$forceUpdate();
+});
+
+vmarkdown.on('firstVisibleLineChange', function (firstVisibleLine) {
+    const node = vmarkdown.findNodeFromLine(firstVisibleLine);
+    preview.scrollTo(node);
+});
+
+vmarkdown.on('cursorChange', function (cursor) {
+    const node = vmarkdown.findNode(cursor);
+    preview.activeTo(node);
+});
 
