@@ -27,40 +27,14 @@ function loadIFrame(id, src) {
 }
 
 
+Promise.all([
+    loadIFrame('editor', __assets__&&__assets__.editor?__assets__.editor:'editor.html'),
+    loadIFrame('preview', __assets__&&__assets__.preview?__assets__.preview:'preview.html')
+]).then(function (editorWindow, previewWindow) {
+
+});
+
 (async function () {
 
-
-    const previewWindow = await loadIFrame('preview', __assets__?__assets__.preview:'preview.html');
-    const editorWindow = await loadIFrame('editor', __assets__?__assets__.editor:'editor.html');
-
-
 })();
-
-
-
-
-
-// function createIFrame(id, src) {
-//     const iframe = document.createElement('iframe');
-//     iframe.setAttribute('frameborder', 0);
-//     iframe.setAttribute('class', 'panel');
-//     iframe.onload = function() {
-//
-//     };
-//     iframe.id = id;
-//     iframe.src = src;
-// }
-//
-// createIFrame('editor', 'https://www.baidu.com');
-
-//<!--<iframe id="editor" class="panel" frameborder="0"></iframe>-->
-
-// (async function () {
-//
-//     const VMarkDown = await import('vmarkdown');
-//
-//
-//
-//
-// })();
 
