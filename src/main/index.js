@@ -28,12 +28,10 @@ function loadIFrame(id, src) {
 
 
 (async function () {
-    const previewWindow = await loadIFrame('preview', 'preview.html');
 
 
-    const editorWindow = await loadIFrame('editor', 'editor.html');
-
-
+    const previewWindow = await loadIFrame('preview', __assets__?__assets__.preview:'preview.html');
+    const editorWindow = await loadIFrame('editor', __assets__?__assets__.editor:'editor.html');
 
 
 })();

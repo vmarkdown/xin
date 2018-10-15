@@ -3,7 +3,7 @@
   "version": "0.0.5",
   "description": "markdown editor.",
   "scripts": {
-    "dist": "NODE_ENV=production webpack -p -c webpack.config.js",
+    "dist": "NODE_ENV=production webpack -p -c webpack.config.js && node ./bin/replace.js",
     "build": "webpack -c webpack.config.js",
     "dev": "webpack-dev-server",
     "test": "mocha test/**/*.js"
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/vmarkdown/xin#readme",
   "devDependencies": {
+    "assets-webpack-plugin": "^3.9.7",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^1.0.0",
     "html-loader": "^0.5.5",

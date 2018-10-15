@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const production = (process.env.NODE_ENV === 'production');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const AssetsPlugin = require('assets-webpack-plugin');
 const pac = require('./package.json');
 
 const minify = production? {
@@ -81,10 +82,6 @@ const config = {
 
 module.exports = [
 
-
-
-
-
     merge(config, {
         entry: {
             editor: path.resolve(__dirname, 'src/editor/index.js')
@@ -97,11 +94,24 @@ module.exports = [
         },
         plugins: [
             new HtmlWebpackPlugin({
-                filename: 'editor.html',
+                filename: production?'editor.[hash].html':'editor.html',
                 template: 'src/editor/index.ejs',
                 minify: minify,
                 templateParameters: {
                     production: production
+                }
+            }),
+            new AssetsPlugin({
+                keepInMemory: production,
+                prettyPrint: true,
+                update: true,
+                path: path.join(__dirname, 'dist'),
+                filename: 'editor.json',
+                processOutput: function (assets) {
+                    const html = assets[""].html;
+                    return JSON.stringify({
+                        'editor': html
+                    },null,2);
                 }
             })
         ]
@@ -119,15 +129,29 @@ module.exports = [
         },
         plugins: [
             new HtmlWebpackPlugin({
-                filename: 'preview.html',
+                filename: production?'preview.[hash].html':'preview.html',
                 template: 'src/preview/index.ejs',
                 minify: minify,
                 templateParameters: {
                     production: production
                 }
+            }),
+            new AssetsPlugin({
+                keepInMemory: production,
+                prettyPrint: true,
+                update: true,
+                path: path.join(__dirname, 'dist'),
+                filename: 'preview.json',
+                processOutput: function (assets) {
+                    const html = assets[""].html;
+                    return JSON.stringify({
+                        'preview': html
+                    },null,2);
+                }
             })
         ]
     }),
+    //
 
     merge(config, {
         entry: {
@@ -146,7 +170,7 @@ module.exports = [
                 }
             })
         ]
-    })
+    }),
 
 ];
 
