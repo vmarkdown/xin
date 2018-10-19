@@ -25,7 +25,7 @@ const config = {
     resolve: {
         alias: {
             'vmarkdown': path.resolve(__dirname, 'src/lib', 'vmarkdown.js'),
-            'lowlight': path.resolve(__dirname, 'src/lib', 'lowlight.js'),
+            // 'lowlight': path.resolve(__dirname, 'src/lib', 'lowlight.js'),
         }
     },
     module: {
@@ -56,10 +56,20 @@ const config = {
         ]
     },
     externals: {
-        'flowchart': 'flowchart',
+        // 'flowchart': 'flowchart',
+        // 'katex': 'katex',
+        // 'mermaid': 'mermaid',
+        // 'underscore': '_'
+
+
         'katex': 'katex',
+        'lowlight': 'lowlight',
+        'flowchart.js': 'flowchart',
+        'underscore': '_',
         'mermaid': 'mermaid',
-        'underscore': '_'
+        '@antv/g2': 'G2',
+
+        // 'vmarkdown': 'VMarkDown'
     },
     plugins: [
         new CleanWebpackPlugin(production?['dist/*.*']:[]),
@@ -108,6 +118,7 @@ module.exports = [
                 path: path.join(__dirname, 'dist'),
                 filename: 'editor.json',
                 processOutput: function (assets) {
+                    if(!production) return assets;
                     const html = assets[""].html;
                     return JSON.stringify({
                         'editor': html
@@ -143,6 +154,7 @@ module.exports = [
                 path: path.join(__dirname, 'dist'),
                 filename: 'preview.json',
                 processOutput: function (assets) {
+                    if(!production) return assets;
                     const html = assets[""].html;
                     return JSON.stringify({
                         'preview': html

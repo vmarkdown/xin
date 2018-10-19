@@ -1,4 +1,5 @@
 require('../lib/vmarkdown-preview.css');
+require('../lib/vmarkdown.css');
 require('./index.scss');
 
 const vmarkdown = window.top.__markdown__;
@@ -26,6 +27,10 @@ vmarkdown.on('firstVisibleLineChange', function (firstVisibleLine) {
 
 vmarkdown.on('cursorChange', function (cursor) {
     const node = vmarkdown.findNode(cursor);
-    preview.activeTo(node);
+    preview.activeTo(node, cursor);
 });
 
+
+$('#print').on('click', function () {
+    window.print();
+});

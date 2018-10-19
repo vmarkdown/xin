@@ -113,7 +113,7 @@ This list can start with any number:
 
 4) The empty line means that the list does not interrupt a paragraph.
 1) The ordered list continues to increment the numbering from the previous list item.
-123456789) Use any number fewer than ten characters. This number is parsed as the third item in the ordered list.
+5) Use any number fewer than ten characters. This number is parsed as the third item in the ordered list.
 
 * Start unordered lists with -, *, or +.
 + You don't even have to use the same character for each list item.
@@ -203,7 +203,26 @@ cond(yes)->e
 cond(no)->op
 ```
 
+## G2
 
+```G2.Chart
+{
+    forceFit: true,
+    height : 300,
+    data:[
+         { genre: 'Sports', sold: 28875 },
+         { genre: 'Strategy', sold: 115 },
+         { genre: 'Action', sold: 120 },
+         { genre: 'Shooter', sold: 350 },
+         { genre: 'Other', sold: 150 }
+    ],
+    interval: {
+        position: 'genre*sold',
+        color: 'genre'
+    }
+
+}
+```
 
 
 

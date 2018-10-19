@@ -11,7 +11,7 @@ Split(['#editor', '#preview'], {
 
 const VMarkDown = require('vmarkdown');
 const vmarkdown = new VMarkDown({
-
+    G2: true
 });
 
 window.__markdown__ = vmarkdown;

@@ -293,10 +293,15 @@ class CodeMirrorEditor extends Editor {
     $onCursorChange(handler) {
         const self = this;
         const cursor = self.editor.getCursor();
+
         const result = {
             line: cursor.line + 1,
             column: cursor.ch + 1
         };
+
+        const position = self.editor.cursorCoords(cursor.line);
+        Object.assign(result, position);
+
         handler && handler.call(self, result);
     }
 
@@ -307,7 +312,8 @@ class CodeMirrorEditor extends Editor {
 
     setValue(value) {
         const self = this;
-        self.editor.setValue(value);
+        const newValue = value + '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n';
+        self.editor.setValue(newValue);
     }
 
     scrollTo(scrollTop) {

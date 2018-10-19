@@ -14,6 +14,9 @@
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0-alpha/katex.min.css">
 
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+
     <style type="text/css" media="screen">
 
         html, body{
@@ -25,11 +28,20 @@
             padding: 40px;
         }
 
+        #print {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 30px;
+            height: 30px;
+            background-color: #6c71c4;
+            cursor: pointer;
+        }
     </style>
 
 </head>
 <body>
-
+<div id="print"></div>
 <div id="preview"><div id="app"></div></div>
 
 </body>
