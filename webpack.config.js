@@ -62,12 +62,12 @@ const config = {
         // 'underscore': '_'
 
 
-        'katex': 'katex',
-        'lowlight': 'lowlight',
-        'flowchart.js': 'flowchart',
-        'underscore': '_',
-        'mermaid': 'mermaid',
-        '@antv/g2': 'G2',
+        // 'katex': 'katex',
+        // 'lowlight': 'lowlight',
+        // 'flowchart.js': 'flowchart',
+        // 'underscore': '_',
+        // 'mermaid': 'mermaid',
+        // '@antv/g2': 'G2',
 
         // 'vmarkdown': 'VMarkDown'
     },
@@ -119,9 +119,13 @@ module.exports = [
                 filename: 'editor.json',
                 processOutput: function (assets) {
                     if(!production) return assets;
+                    const js = assets["editor"].js;
                     const html = assets[""].html;
                     return JSON.stringify({
-                        'editor': html
+                        'editor': {
+                            js: js,
+                            html: html
+                        }
                     },null,2);
                 }
             })
@@ -156,9 +160,13 @@ module.exports = [
                 filename: 'preview.json',
                 processOutput: function (assets) {
                     if(!production) return assets;
+                    const js = assets["preview"].js;
                     const html = assets[""].html;
                     return JSON.stringify({
-                        'preview': html
+                        'preview': {
+                            js: js,
+                            html: html
+                        }
                     },null,2);
                 }
             })
@@ -179,7 +187,9 @@ module.exports = [
                 template: 'src/index.ejs',
                 minify: minify,
                 templateParameters: {
-                    production: production
+                    production: production,
+                    editor: 'editor.html',
+                    preview: 'preview.html'
                 }
             })
         ]

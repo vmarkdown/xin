@@ -7,14 +7,12 @@ const editor = new CodeMirrorEditor(document.getElementById('editor'), {
 });
 
 editor.on('cursorChange', function (cursor) {
-    // vmarkdown.emit('cursorChange', cursor);
     // localStorage.setItem("cursorChange", JSON.stringify(cursor));
     store.$emit('cursorChange', cursor);
 });
 
 function onScroll() {
     const firstVisibleLine = editor.getFirstVisibleLine();
-    // vmarkdown.emit('firstVisibleLineChange', firstVisibleLine);
     // localStorage.setItem("firstVisibleLineChange", firstVisibleLine);
     store.$emit('firstVisibleLineChange', firstVisibleLine);
 }
@@ -25,13 +23,18 @@ function onChange() {
     const value = editor.getValue();
     // vmarkdown.setValue(value);
     // localStorage.setItem("change", value);
+    localStorage.setItem("xin", value);
     store.$emit('change', value);
 }
 
 editor.on('change', _.debounce(onChange, 300, {maxWait: 20*1000}));
 
-store.$on('ready', function () {
-    const value = require('../lib/github.md');
+store.$on('ready', async function () {
+    let value = localStorage.getItem("xin");
+    if(!value) {
+        value = (await import('../lib/github.md')).default;
+    }
+    // const value = require('../lib/github.md');
     editor.setValue(value);
 });
 
