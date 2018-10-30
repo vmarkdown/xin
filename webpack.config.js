@@ -24,8 +24,7 @@ const config = {
     },
     resolve: {
         alias: {
-            'vmarkdown': path.resolve(__dirname, 'src/lib', 'vmarkdown.js'),
-            // 'lowlight': path.resolve(__dirname, 'src/lib', 'lowlight.js'),
+            'vmarkdown': path.resolve(__dirname, 'www', 'vmarkdown.bdefa65328a00e4e1ff3.min.js')
         }
     },
     module: {
@@ -35,7 +34,7 @@ const config = {
                 use: 'html-loader'
             },
             {
-                test: /\.md$/,
+                test: /\.(md|svg)$/,
                 use: 'text-loader'
             },
             {

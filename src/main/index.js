@@ -1,20 +1,15 @@
 require('./index.scss');
 
-import Split from 'split.js';
+require('./split');
 
-Split(['#editor', '#preview'], {
-    sizes: [50, 50],
-    gutterSize: 3,
-    minSize: 320,
-    direction: 'horizontal'
-});
+const store = window.store;
 
-const VMarkDown = require('vmarkdown');
-const vmarkdown = new VMarkDown({
-    G2: true
-});
 
-window.__markdown__ = vmarkdown;
+// const VMarkDown = require('vmarkdown');
+// const vmarkdown = new VMarkDown({
+//     G2: true
+// });
+// window.__markdown__ = vmarkdown;
 
 function loadIFrame(id, src) {
     return new Promise(function (resolve, reject) {
@@ -27,10 +22,38 @@ function loadIFrame(id, src) {
 }
 
 
+function previewReady() {
+    return new Promise(function (resolve, reject) {
+        store.$on('previewReady', function () {
+            resolve();
+        });
+    });
+}
+
+function editorReady() {
+    return new Promise(function (resolve, reject) {
+        store.$on('editorReady', function () {
+            resolve();
+        });
+    });
+}
+
+Promise.all([
+    previewReady(), editorReady()
+]).then(function () {
+    store.$emit('ready');
+});
+
 Promise.all([
     loadIFrame('editor', __assets__&&__assets__.editor?__assets__.editor:'editor.html'),
     loadIFrame('preview', __assets__&&__assets__.preview?__assets__.preview:'preview.html')
 ]).then(function (editorWindow, previewWindow) {
+
+    // const md = require('../lib/github.md');
+    // store.$emit('previewReady', true);
+    // store.$on('previewReady', function () {
+    //     editor.setValue(md);
+    // });
 
 });
 

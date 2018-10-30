@@ -4,11 +4,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <title>xin markdown editor</title>
-    <script>
-        var __assets__ = '{%assets%}';
-    </script>
 </head>
 <body>
+
+<script>
+    var store = (function store() {
+
+        var Event = function () {
+        };
+
+        Event.prototype = {
+            $on: function (event, fct) {
+                this._events = this._events || {};
+                this._events[event] = this._events[event] || [];
+                this._events[event].push(fct);
+            },
+            $off: function (event, fct) {
+                this._events = this._events || {};
+                if (event in this._events === false) return;
+                this._events[event].splice(this._events[event].indexOf(fct), 1);
+            },
+            $emit: function (event /* , args... */) {
+                this._events = this._events || {};
+                if (event in this._events === false) return;
+                for (var i = 0; i < this._events[event].length; i++) {
+                    this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1));
+                }
+            }
+        };
+        Event.mixin = function (destObject) {
+            var props = ['$on', '$off', '$emit'];
+            for (var i = 0; i < props.length; i++) {
+                if (typeof destObject === 'function') {
+                    destObject.prototype[props[i]] = Event.prototype[props[i]];
+                } else {
+                    destObject[props[i]] = Event.prototype[props[i]];
+                }
+            }
+            return destObject;
+        };
+
+        return new Event();
+
+    })();
+</script>
+
+<script>
+    try {
+        window.__assets__ = '{%assets%}';
+    }
+    catch (e) {
+
+    }
+</script>
 
 <!--<div class="base-line"></div>-->
 <iframe id="editor" class="panel" frameborder="0"></iframe>
@@ -16,32 +64,35 @@
 <iframe id="preview" class="panel" frameborder="0"></iframe>
 
 
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>-->
+
+
 <!-- vue -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>-->
 
-<!-- common start -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.0/underscore.js"></script>
-<!-- common end -->
+<!--&lt;!&ndash; common start &ndash;&gt;-->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.9.0/underscore.js"></script>-->
+<!--&lt;!&ndash; common end &ndash;&gt;-->
 
-<!-- katex -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0-alpha/katex.min.js"></script>
+<!--&lt;!&ndash; katex &ndash;&gt;-->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0-alpha/katex.min.js"></script>-->
 
-<!-- lowlight -->
-<script src="lowlight.js"></script>
+<!--&lt;!&ndash; lowlight &ndash;&gt;-->
+<!--<script src="lowlight.js"></script>-->
 
-<!-- g2 -->
-<script src="//gw.alipayobjects.com/os/antv/pkg/_antv.g2-3.3.1/dist/g2.min.js"></script>
-<script src="//gw.alipayobjects.com/os/antv/pkg/_antv.data-set-0.9.6/dist/data-set.min.js"></script>
-<script>G2.track(false);</script>
+<!--&lt;!&ndash; g2 &ndash;&gt;-->
+<!--<script src="//gw.alipayobjects.com/os/antv/pkg/_antv.g2-3.3.1/dist/g2.min.js"></script>-->
+<!--<script src="//gw.alipayobjects.com/os/antv/pkg/_antv.data-set-0.9.6/dist/data-set.min.js"></script>-->
+<!--<script>G2.track(false);</script>-->
 
-<!-- flowchart -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/flowchart/1.11.0/flowchart.js"></script>
+<!--&lt;!&ndash; flowchart &ndash;&gt;-->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.js"></script>-->
+<!--<script src="//cdnjs.cloudflare.com/ajax/libs/flowchart/1.11.0/flowchart.js"></script>-->
 
-<!-- sequence -->
+<!--&lt;!&ndash; sequence &ndash;&gt;-->
 
-<!-- mermaid -->
-<script src="//cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<!--&lt;!&ndash; mermaid &ndash;&gt;-->
+<!--<script src="//cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>-->
 
 <!-- vmarkdown -->
 <!--<script src="vmarkdown.js"></script>-->
