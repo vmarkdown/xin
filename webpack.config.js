@@ -24,7 +24,8 @@ const config = {
     },
     resolve: {
         alias: {
-            'vmarkdown': path.resolve(__dirname, 'www', 'vmarkdown.bdefa65328a00e4e1ff3.min.js')
+            'vmarkdown': path.resolve(__dirname, 'www', 'vmarkdown.bdefa65328a00e4e1ff3.min.js'),
+            'vremark-plugin-manager': path.resolve(__dirname, 'www/vremark', 'vremark-plugin-manager.min.js'),
         }
     },
     module: {
@@ -143,7 +144,8 @@ module.exports = [
                 template: 'src/preview/index.ejs',
                 minify: minify,
                 templateParameters: {
-                    production: production
+                    production: production,
+                    plugins: JSON.stringify(require('./www/vremark/plugins.json'))
                 }
             }),
             new AssetsPlugin({
