@@ -7,6 +7,8 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const AssetsPlugin = require('assets-webpack-plugin');
 const pac = require('./package.json');
 
+const assets = require('./bin/assets');
+
 const minify = production? {
     minifyCSS: true,
     minifyJS: true,
@@ -18,13 +20,14 @@ const config = {
     mode: 'none',
     output: {
         path: path.resolve(__dirname, production?'dist':'www'),
-        filename: production?'[name].[hash].js':'[name].js',
+        filename: production?'[name].[contenthash].js':'[name].js',
+        chunkFilename: production?'[name].[contenthash].chunk.js':'[name].chunk.js',
         libraryTarget: "umd",
         library: "[name]"
     },
     resolve: {
         alias: {
-            'vmarkdown': path.resolve(__dirname, 'www', 'vmarkdown.bdefa65328a00e4e1ff3.min.js'),
+            'vmarkdown': path.resolve(__dirname, 'www', assets['vmarkdown'].js ),
             'vremark-plugin-manager': path.resolve(__dirname, 'www/vremark', 'vremark-plugin-manager.min.js'),
         }
     },
@@ -108,11 +111,12 @@ module.exports = [
                 template: 'src/editor/index.ejs',
                 minify: minify,
                 templateParameters: {
-                    production: production
+                    production: production,
+                    assets: assets
                 }
             }),
             new AssetsPlugin({
-                keepInMemory: production,
+                keepInMemory: !production,
                 prettyPrint: true,
                 update: true,
                 path: path.join(__dirname, 'dist'),
@@ -149,11 +153,12 @@ module.exports = [
                 minify: minify,
                 templateParameters: {
                     production: production,
-                    plugins: JSON.stringify(require('./www/vremark/plugins.json'))
+                    plugins: JSON.stringify(require('./www/vremark/plugins.json')),
+                    assets: assets
                 }
             }),
             new AssetsPlugin({
-                keepInMemory: production,
+                keepInMemory: !production,
                 prettyPrint: true,
                 update: true,
                 path: path.join(__dirname, 'dist'),
