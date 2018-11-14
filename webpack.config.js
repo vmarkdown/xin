@@ -7,6 +7,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const AssetsPlugin = require('assets-webpack-plugin');
 const pac = require('./package.json');
 
+const plugins = require('./www/vremark/plugins.json');
 const assets = require('./bin/assets');
 
 const minify = production? {
@@ -81,7 +82,7 @@ const config = {
                 NODE_ENV: JSON.stringify(process.env.NODE_ENV)
             },
             'VERSION': JSON.stringify(pac.version),
-            '__plugins__': JSON.stringify(require('./www/vremark/plugins.json')),
+            '__plugins__': JSON.stringify(plugins),
             // 'VERSION': JSON.stringify(pac.version + ':' +new Date())
         }),
 
