@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="<%= assets['vmarkdown-preview'].css %>">
     <script src="<%= assets['vmarkdown-preview-vendors'].js %>"></script>
     <script src="<%= assets['vmarkdown-preview'].js %>"></script>
-
+    <script src="require.js"></script>
 
     <style type="text/css" media="screen">
 
@@ -19,7 +19,6 @@
         }
 
         #preview {
-            padding: 40px;
         }
 
         #print {
@@ -30,6 +29,11 @@
             height: 30px;
             background-color: #6c71c4;
             cursor: pointer;
+        }
+
+        #preview .preview-wrap{
+            padding: 40px 40px 100vh 40px;
+
         }
     </style>
 
@@ -44,11 +48,21 @@
         catch (e) {
             console.error(e);
         }
+
+        requirejs.config({
+            paths: window.__plugins__ || {}
+        });
+
+
     })();
 </script>
 
 <!--<div id="print"></div>-->
-<div id="preview"><div id="app"></div></div>
+<div id="preview">
+    <div class="preview-wrap">
+        <div id="app"></div>
+    </div>
+</div>
 
 </body>
 </html>

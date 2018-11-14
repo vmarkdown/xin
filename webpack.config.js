@@ -22,7 +22,7 @@ const config = {
         path: path.resolve(__dirname, production?'dist':'www'),
         filename: production?'[name].[contenthash].js':'[name].js',
         chunkFilename: production?'[name].[contenthash].chunk.js':'[name].chunk.js',
-        libraryTarget: "umd",
+        // libraryTarget: "umd",
         library: "[name]"
     },
     resolve: {

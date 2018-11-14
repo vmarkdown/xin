@@ -8,8 +8,14 @@ const editor = new CodeMirrorEditor(document.getElementById('editor'), {
 
 function onScroll() {
     const firstVisibleLine = editor.getFirstVisibleLine();
+    // console.log(firstVisibleLine);
+
+    let scrollTop = -1;
+    if(firstVisibleLine === 1){
+        scrollTop = editor.getScrollTop();
+    }
     // localStorage.setItem("firstVisibleLineChange", firstVisibleLine);
-    store.$emit('firstVisibleLineChange', firstVisibleLine);
+    store.$emit('firstVisibleLineChange', firstVisibleLine, scrollTop);
 }
 
 function onChange() {
@@ -46,3 +52,7 @@ store.$on('ready', async function () {
 
 store.$emit('editorReady', true);
 
+store.$on('previewRefresh', function () {
+    const value = editor.getValue();
+    store.$emit('change', value);
+});
