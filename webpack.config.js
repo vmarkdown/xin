@@ -80,7 +80,8 @@ const config = {
             'process.env': {
                 NODE_ENV: JSON.stringify(process.env.NODE_ENV)
             },
-            'VERSION': JSON.stringify(pac.version)
+            'VERSION': JSON.stringify(pac.version),
+            '__plugins__': JSON.stringify(require('./www/vremark/plugins.json')),
             // 'VERSION': JSON.stringify(pac.version + ':' +new Date())
         }),
 

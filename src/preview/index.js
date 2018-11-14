@@ -1,28 +1,17 @@
 require('./themes/github.default.theme.css');
 require('./index.scss');
-const store = window.top.store;
+
+const plugins = require('./plugins');
+
+const store = window.top.store || {$on: function () {},$emit: function () {}};
 const VMarkDown = require('vmarkdown');
 import Vue from 'vue';
 Vue.use(VMarkDown);
 
 const loading = require('./components/loading');
-// const PluginManager = require('vremark-plugin-manager');
 
 const preview = new VMarkDownPreview({
 });
-
-// const pluginManager = new PluginManager({
-//     plugins: [
-//
-//     ],
-//     config: {
-//         paths: Object.assign({}, window.__plugins__)
-//     },
-//     onOneLoaded: function (plugin) {
-//         const component = plugin.component || plugin;
-//         Vue.component(component.name, component);
-//     }
-// });
 
 const vmarkdown = new VMarkDown({
     config: {
@@ -34,37 +23,15 @@ const vmarkdown = new VMarkDown({
 });
 
 
-requirejs([
-    'vremark-plugin-math',
-    'vremark-plugin-flowchart',
-    'vremark-plugin-mermaid',
-    'vremark-plugin-sequence',
-    'vremark-plugin-g2',
-    'vremark-plugin-chart',
-    'vremark-plugin-highlight'
-
-], function () {
-    Array.prototype.slice.call(arguments).forEach(function (plugin) {
+plugins(function (modules) {
+    modules && modules.forEach(function (plugin) {
         vmarkdown.registerPlugin(plugin);
     });
-// debugger
-//     console
-    // setTimeout(function () {
-    //     app.refresh();
-    // }, 2000);
-
     store.$emit('previewRefresh');
-
-}, function () {
-
 });
-
 
 const app = new Vue({
     el: '#app',
-    // data: {
-    //     vdom: null
-    // },
     render(h) {
         return this.vdom || h(loading);
     },

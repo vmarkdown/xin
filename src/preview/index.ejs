@@ -7,9 +7,6 @@
     <title>Preview</title>
 
     <link rel="stylesheet" href="<%= assets['vmarkdown-preview'].css %>">
-    <script src="<%= assets['vmarkdown-preview-vendors'].js %>"></script>
-    <script src="<%= assets['vmarkdown-preview'].js %>"></script>
-    <script src="require.js"></script>
 
     <style type="text/css" media="screen">
 
@@ -39,23 +36,6 @@
 
 </head>
 <body>
-<div></div>
-<script>
-    (function () {
-        try {
-            window.__plugins__ =  <%= plugins %>;
-        }
-        catch (e) {
-            console.error(e);
-        }
-
-        requirejs.config({
-            paths: window.__plugins__ || {}
-        });
-
-
-    })();
-</script>
 
 <!--<div id="print"></div>-->
 <div id="preview">
@@ -63,6 +43,9 @@
         <div id="app"></div>
     </div>
 </div>
+
+<script src="<%= assets['vmarkdown-preview-vendors'].js %>"></script>
+<script src="<%= assets['vmarkdown-preview'].js %>"></script>
 
 </body>
 </html>

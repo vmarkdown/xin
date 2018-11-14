@@ -1,5 +1,5 @@
 require('./index.scss');
-const store = window.top.store;
+const store = window.top.store || {$on: function () {},$emit: function () {}};
 const _ = require('lodash');
 
 const editor = new CodeMirrorEditor(document.getElementById('editor'), {
