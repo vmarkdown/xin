@@ -9,6 +9,10 @@ const assets = {
         js: '',
         css: '',
     },
+    'vmarkdown-worker': {
+        js: '',
+        css: '',
+    },
     'vmarkdown-editor-vendors': {
         js: '',
         css: '',
@@ -31,7 +35,10 @@ files.forEach(function(name){
 
     name = name.replace(path.resolve(__dirname, '../www/')+'/', '');
 
-    if(/vmarkdown\.[a-zA-Z0-9]+\.min\.js$/.test(name)){
+    if(/vmarkdown\.worker\.[a-zA-Z0-9]+\.min\.js$/.test(name)){
+        assets['vmarkdown-worker'].js = name;
+    }
+    else if(/vmarkdown\.[a-zA-Z0-9]+\.min\.js$/.test(name)){
         assets['vmarkdown'].js = name;
     }
     else if(/vmarkdown-codemirror-editor-vendors\.[a-zA-Z0-9]+\.min\.css$/.test(name)){
