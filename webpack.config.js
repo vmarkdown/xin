@@ -183,7 +183,6 @@ module.exports = [
             })
         ]
     }),
-    //
 
     merge(config, {
         entry: {

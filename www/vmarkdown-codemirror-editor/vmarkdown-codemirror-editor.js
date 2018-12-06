@@ -203,9 +203,12 @@ __webpack_require__(10);
 __webpack_require__(11);
 __webpack_require__(12);
 
+__webpack_require__(13);
+__webpack_require__(14);
+
 
 // import Editor from './base/editor';
-const Editor = __webpack_require__(13);
+const Editor = __webpack_require__(15);
 
 // var deepClone = function (obj) {
 //     var _tmp,result;
@@ -214,19 +217,44 @@ const Editor = __webpack_require__(13);
 //     return result;
 // }
 
-function trimTrailingLines(value) {
-    var val = value;
-    var index = val.length - 1;
-    while (index >= 0) {
-        var v = val.charAt(index);
-        if(v !== '\n' && v !== ' '){
-            break
-        }
-        --index;
-    }
+const util = __webpack_require__(16);
 
-    return val.slice(0, index + 1)
-}
+// "text/markdown"
+CodeMirror.defineMode("vmarkdown", function(config, parserConfig) {
+    var mustacheOverlay = {
+        token1: function(stream, state) {
+            var ch;
+            if (stream.match("{{")) {
+                while ((ch = stream.next()) != null)
+                    if (ch == "}" && stream.next() == "}") {
+                        stream.eat("}");
+                        return "mustache";
+                    }
+            }
+            while (stream.next() != null && !stream.match("{{", false)) {}
+            return null;
+        },
+        token: function(stream, state) {
+            // debugger
+            // if (stream.match("[TOC]", true, true)) {
+            //     return "toc";
+            // }
+            // while (stream.next() != null && !stream.match("[TOC]", false, true)) {}
+            // return null;
+
+            var match = stream.match(/^ {0,3}\[(TOC|toc)\]/, true, true);
+            if( match ) {
+                return "toc";
+            }
+            else {
+                stream.skipToEnd();
+            }
+            return null;
+        }
+    };
+    return CodeMirror.overlayMode(CodeMirror.getMode(config, parserConfig.backdrop || "text/markdown"), mustacheOverlay);
+});
+
 
 class CodeMirrorEditor extends Editor {
 
@@ -238,7 +266,8 @@ class CodeMirrorEditor extends Editor {
             Object.assign({
                 theme:'default vmarkdown',
                 value: '',
-                mode:  "markdown",
+                mode:  "vmarkdown",
+                // mode:  "markdown",
                 // viewportMargin: 100,
                 // maxHighlightLength: Infinity,
                 lineWrapping: true,
@@ -404,7 +433,7 @@ class CodeMirrorEditor extends Editor {
 
     getValue() {
         const self = this;
-        const value = trimTrailingLines(self.editor.getValue());
+        const value = util.trimTrailingLines(self.editor.getValue());
         return value;
     }
 
@@ -575,7 +604,9 @@ module.exports = CodeMirrorEditor;
 /* 10 */,
 /* 11 */,
 /* 12 */,
-/* 13 */
+/* 13 */,
+/* 14 */,
+/* 15 */
 /***/ (function(module, exports) {
 
 // import Emitter from './emitter';
@@ -611,6 +642,27 @@ class Editor {
 }
 
 module.exports = Editor;
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+module.exports = {
+    trimTrailingLines: function trimTrailingLines(value) {
+    var val = value;
+    var index = val.length - 1;
+    while (index >= 0) {
+        var v = val.charAt(index);
+        if(v !== '\n' && v !== ' '){
+            break
+        }
+        --index;
+    }
+
+    return val.slice(0, index + 1)
+}
+};
+
 
 /***/ })
 /******/ ]);

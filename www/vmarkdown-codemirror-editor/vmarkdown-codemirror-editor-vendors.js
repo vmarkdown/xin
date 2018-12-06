@@ -1891,7 +1891,7 @@
 
   // Build up the DOM representation for a single token, and add it to
   // the line map. Takes care to render special characters separately.
-  function buildToken(builder, text, style, startStyle, endStyle, title, css) {
+  function buildToken(builder, text, style, startStyle, endStyle, css, attributes) {
     if (!text) { return }
     var displayText = builder.splitSpaces ? splitSpaces(text, builder.trailingSpace) : text;
     var special = builder.cm.state.specialChars, mustWrap = false;
@@ -1947,7 +1947,10 @@
       if (startStyle) { fullStyle += startStyle; }
       if (endStyle) { fullStyle += endStyle; }
       var token = elt("span", [content], fullStyle, css);
-      if (title) { token.title = title; }
+      if (attributes) {
+        for (var attr in attributes) { if (attributes.hasOwnProperty(attr) && attr != "style" && attr != "class")
+          { token.setAttribute(attr, attributes[attr]); } }
+      }
       return builder.content.appendChild(token)
     }
     builder.content.appendChild(content);
@@ -1971,7 +1974,7 @@
   // Work around nonsense dimensions being reported for stretches of
   // right-to-left text.
   function buildTokenBadBidi(inner, order) {
-    return function (builder, text, style, startStyle, endStyle, title, css) {
+    return function (builder, text, style, startStyle, endStyle, css, attributes) {
       style = style ? style + " cm-force-border" : "cm-force-border";
       var start = builder.pos, end = start + text.length;
       for (;;) {
@@ -1981,8 +1984,8 @@
           part = order[i];
           if (part.to > start && part.from <= start) { break }
         }
-        if (part.to >= end) { return inner(builder, text, style, startStyle, endStyle, title, css) }
-        inner(builder, text.slice(0, part.to - start), style, startStyle, null, title, css);
+        if (part.to >= end) { return inner(builder, text, style, startStyle, endStyle, css, attributes) }
+        inner(builder, text.slice(0, part.to - start), style, startStyle, null, css, attributes);
         startStyle = null;
         text = text.slice(part.to - start);
         start = part.to;
@@ -2017,10 +2020,11 @@
     }
 
     var len = allText.length, pos = 0, i = 1, text = "", style, css;
-    var nextChange = 0, spanStyle, spanEndStyle, spanStartStyle, title, collapsed;
+    var nextChange = 0, spanStyle, spanEndStyle, spanStartStyle, collapsed, attributes;
     for (;;) {
       if (nextChange == pos) { // Update current marker set
-        spanStyle = spanEndStyle = spanStartStyle = title = css = "";
+        spanStyle = spanEndStyle = spanStartStyle = css = "";
+        attributes = null;
         collapsed = null; nextChange = Infinity;
         var foundBookmarks = [], endStyles = (void 0);
         for (var j = 0; j < spans.length; ++j) {
@@ -2036,7 +2040,13 @@
             if (m.css) { css = (css ? css + ";" : "") + m.css; }
             if (m.startStyle && sp.from == pos) { spanStartStyle += " " + m.startStyle; }
             if (m.endStyle && sp.to == nextChange) { (endStyles || (endStyles = [])).push(m.endStyle, sp.to); }
-            if (m.title && !title) { title = m.title; }
+            // support for the old title property
+            // https://github.com/codemirror/CodeMirror/pull/5673
+            if (m.title) { (attributes || (attributes = {})).title = m.title; }
+            if (m.attributes) {
+              for (var attr in m.attributes)
+                { (attributes || (attributes = {}))[attr] = m.attributes[attr]; }
+            }
             if (m.collapsed && (!collapsed || compareCollapsedMarkers(collapsed.marker, m) < 0))
               { collapsed = sp; }
           } else if (sp.from > pos && nextChange > sp.from) {
@@ -2064,7 +2074,7 @@
           if (!collapsed) {
             var tokenText = end > upto ? text.slice(0, upto - pos) : text;
             builder.addToken(builder, tokenText, style ? style + spanStyle : spanStyle,
-                             spanStartStyle, pos + tokenText.length == nextChange ? spanEndStyle : "", title, css);
+                             spanStartStyle, pos + tokenText.length == nextChange ? spanEndStyle : "", css, attributes);
           }
           if (end >= upto) {text = text.slice(upto - pos); pos = upto; break}
           pos = end;
@@ -3273,7 +3283,8 @@
     var display = cm.display;
     var prevBottom = display.lineDiv.offsetTop;
     for (var i = 0; i < display.view.length; i++) {
-      var cur = display.view[i], height = (void 0);
+      var cur = display.view[i], wrapping = cm.options.lineWrapping;
+      var height = (void 0), width = 0;
       if (cur.hidden) { continue }
       if (ie && ie_version < 8) {
         var bot = cur.node.offsetTop + cur.node.offsetHeight;
@@ -3282,6 +3293,10 @@
       } else {
         var box = cur.node.getBoundingClientRect();
         height = box.bottom - box.top;
+        // Check that lines don't extend past the right of the current
+        // editor width
+        if (!wrapping && cur.text.firstChild)
+          { width = cur.text.firstChild.getBoundingClientRect().right - box.left - 1; }
       }
       var diff = cur.line.height - height;
       if (height < 2) { height = textHeight(display); }
@@ -3290,6 +3305,14 @@
         updateWidgetHeight(cur.line);
         if (cur.rest) { for (var j = 0; j < cur.rest.length; j++)
           { updateWidgetHeight(cur.rest[j]); } }
+      }
+      if (width > cm.display.sizerWidth) {
+        var chWidth = Math.ceil(width / charWidth(cm.display));
+        if (chWidth > cm.display.maxLineLength) {
+          cm.display.maxLineLength = chWidth;
+          cm.display.maxLine = cur.line;
+          cm.display.maxLineChanged = true;
+        }
       }
     }
   }
@@ -5957,7 +5980,8 @@
       if (updateMaxLine) { cm.curOp.updateMaxLine = true; }
       if (marker.collapsed)
         { regChange(cm, from.line, to.line + 1); }
-      else if (marker.className || marker.title || marker.startStyle || marker.endStyle || marker.css)
+      else if (marker.className || marker.startStyle || marker.endStyle || marker.css ||
+               marker.attributes || marker.title)
         { for (var i = from.line; i <= to.line; i++) { regLineChange(cm, i, "text"); } }
       if (marker.atomic) { reCheckSelection(cm.doc); }
       signalLater(cm, "markerAdded", cm, marker);
@@ -6575,11 +6599,14 @@
 
   function forEachCodeMirror(f) {
     if (!document.getElementsByClassName) { return }
-    var byClass = document.getElementsByClassName("CodeMirror");
+    var byClass = document.getElementsByClassName("CodeMirror"), editors = [];
     for (var i = 0; i < byClass.length; i++) {
       var cm = byClass[i].CodeMirror;
-      if (cm) { f(cm); }
+      if (cm) { editors.push(cm); }
     }
+    if (editors.length) { editors[0].operation(function () {
+      for (var i = 0; i < editors.length; i++) { f(editors[i]); }
+    }); }
   }
 
   var globalsRegistered = false;
@@ -9704,7 +9731,7 @@
 
   addLegacyProps(CodeMirror);
 
-  CodeMirror.version = "5.41.0";
+  CodeMirror.version = "5.42.0";
 
   return CodeMirror;
 
@@ -11057,7 +11084,7 @@ CodeMirror.defineMIME("text/x-markdown", "markdown");
     {name: "Factor", mime: "text/x-factor", mode: "factor", ext: ["factor"]},
     {name: "FCL", mime: "text/x-fcl", mode: "fcl"},
     {name: "Forth", mime: "text/x-forth", mode: "forth", ext: ["forth", "fth", "4th"]},
-    {name: "Fortran", mime: "text/x-fortran", mode: "fortran", ext: ["f", "for", "f77", "f90"]},
+    {name: "Fortran", mime: "text/x-fortran", mode: "fortran", ext: ["f", "for", "f77", "f90", "f95"]},
     {name: "F#", mime: "text/x-fsharp", mode: "mllike", ext: ["fs"], alias: ["fsharp"]},
     {name: "Gas", mime: "text/x-gas", mode: "gas", ext: ["s"]},
     {name: "Gherkin", mime: "text/x-feature", mode: "gherkin", ext: ["feature"]},
@@ -11548,6 +11575,233 @@ CodeMirror.defineMIME("text/x-markdown", "markdown");
   CodeMirror.scrollbarModel.overlay = function(place, scroll) {
     return new SimpleScrollbars("CodeMirror-overlayscroll", place, scroll);
   };
+});
+
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: https://codemirror.net/LICENSE
+
+// Utility function that allows modes to be combined. The mode given
+// as the base argument takes care of most of the normal mode
+// functionality, but a second (typically simple) mode is used, which
+// can override the style of text. Both modes get to parse all of the
+// text, but when both assign a non-null style to a piece of code, the
+// overlay wins, unless the combine argument was true and not overridden,
+// or state.overlay.combineTokens was true, in which case the styles are
+// combined.
+
+(function(mod) {
+  if (true) // CommonJS
+    mod(__webpack_require__(5));
+  else {}
+})(function(CodeMirror) {
+"use strict";
+
+CodeMirror.overlayMode = function(base, overlay, combine) {
+  return {
+    startState: function() {
+      return {
+        base: CodeMirror.startState(base),
+        overlay: CodeMirror.startState(overlay),
+        basePos: 0, baseCur: null,
+        overlayPos: 0, overlayCur: null,
+        streamSeen: null
+      };
+    },
+    copyState: function(state) {
+      return {
+        base: CodeMirror.copyState(base, state.base),
+        overlay: CodeMirror.copyState(overlay, state.overlay),
+        basePos: state.basePos, baseCur: null,
+        overlayPos: state.overlayPos, overlayCur: null
+      };
+    },
+
+    token: function(stream, state) {
+      if (stream != state.streamSeen ||
+          Math.min(state.basePos, state.overlayPos) < stream.start) {
+        state.streamSeen = stream;
+        state.basePos = state.overlayPos = stream.start;
+      }
+
+      if (stream.start == state.basePos) {
+        state.baseCur = base.token(stream, state.base);
+        state.basePos = stream.pos;
+      }
+      if (stream.start == state.overlayPos) {
+        stream.pos = stream.start;
+        state.overlayCur = overlay.token(stream, state.overlay);
+        state.overlayPos = stream.pos;
+      }
+      stream.pos = Math.min(state.basePos, state.overlayPos);
+
+      // state.overlay.combineTokens always takes precedence over combine,
+      // unless set to null
+      if (state.overlayCur == null) return state.baseCur;
+      else if (state.baseCur != null &&
+               state.overlay.combineTokens ||
+               combine && state.overlay.combineTokens == null)
+        return state.baseCur + " " + state.overlayCur;
+      else return state.overlayCur;
+    },
+
+    indent: base.indent && function(state, textAfter) {
+      return base.indent(state.base, textAfter);
+    },
+    electricChars: base.electricChars,
+
+    innerMode: function(state) { return {state: state.base, mode: base}; },
+
+    blankLine: function(state) {
+      var baseToken, overlayToken;
+      if (base.blankLine) baseToken = base.blankLine(state.base);
+      if (overlay.blankLine) overlayToken = overlay.blankLine(state.overlay);
+
+      return overlayToken == null ?
+        baseToken :
+        (combine && baseToken != null ? baseToken + " " + overlayToken : overlayToken);
+    }
+  };
+};
+
+});
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: https://codemirror.net/LICENSE
+
+(function(mod) {
+  if (true) // CommonJS
+    mod(__webpack_require__(5));
+  else {}
+})(function(CodeMirror) {
+"use strict";
+
+CodeMirror.multiplexingMode = function(outer /*, others */) {
+  // Others should be {open, close, mode [, delimStyle] [, innerStyle]} objects
+  var others = Array.prototype.slice.call(arguments, 1);
+
+  function indexOf(string, pattern, from, returnEnd) {
+    if (typeof pattern == "string") {
+      var found = string.indexOf(pattern, from);
+      return returnEnd && found > -1 ? found + pattern.length : found;
+    }
+    var m = pattern.exec(from ? string.slice(from) : string);
+    return m ? m.index + from + (returnEnd ? m[0].length : 0) : -1;
+  }
+
+  return {
+    startState: function() {
+      return {
+        outer: CodeMirror.startState(outer),
+        innerActive: null,
+        inner: null
+      };
+    },
+
+    copyState: function(state) {
+      return {
+        outer: CodeMirror.copyState(outer, state.outer),
+        innerActive: state.innerActive,
+        inner: state.innerActive && CodeMirror.copyState(state.innerActive.mode, state.inner)
+      };
+    },
+
+    token: function(stream, state) {
+      if (!state.innerActive) {
+        var cutOff = Infinity, oldContent = stream.string;
+        for (var i = 0; i < others.length; ++i) {
+          var other = others[i];
+          var found = indexOf(oldContent, other.open, stream.pos);
+          if (found == stream.pos) {
+            if (!other.parseDelimiters) stream.match(other.open);
+            state.innerActive = other;
+
+            // Get the outer indent, making sure to handle CodeMirror.Pass
+            var outerIndent = 0;
+            if (outer.indent) {
+              var possibleOuterIndent = outer.indent(state.outer, "");
+              if (possibleOuterIndent !== CodeMirror.Pass) outerIndent = possibleOuterIndent;
+            }
+
+            state.inner = CodeMirror.startState(other.mode, outerIndent);
+            return other.delimStyle && (other.delimStyle + " " + other.delimStyle + "-open");
+          } else if (found != -1 && found < cutOff) {
+            cutOff = found;
+          }
+        }
+        if (cutOff != Infinity) stream.string = oldContent.slice(0, cutOff);
+        var outerToken = outer.token(stream, state.outer);
+        if (cutOff != Infinity) stream.string = oldContent;
+        return outerToken;
+      } else {
+        var curInner = state.innerActive, oldContent = stream.string;
+        if (!curInner.close && stream.sol()) {
+          state.innerActive = state.inner = null;
+          return this.token(stream, state);
+        }
+        var found = curInner.close ? indexOf(oldContent, curInner.close, stream.pos, curInner.parseDelimiters) : -1;
+        if (found == stream.pos && !curInner.parseDelimiters) {
+          stream.match(curInner.close);
+          state.innerActive = state.inner = null;
+          return curInner.delimStyle && (curInner.delimStyle + " " + curInner.delimStyle + "-close");
+        }
+        if (found > -1) stream.string = oldContent.slice(0, found);
+        var innerToken = curInner.mode.token(stream, state.inner);
+        if (found > -1) stream.string = oldContent;
+
+        if (found == stream.pos && curInner.parseDelimiters)
+          state.innerActive = state.inner = null;
+
+        if (curInner.innerStyle) {
+          if (innerToken) innerToken = innerToken + " " + curInner.innerStyle;
+          else innerToken = curInner.innerStyle;
+        }
+
+        return innerToken;
+      }
+    },
+
+    indent: function(state, textAfter) {
+      var mode = state.innerActive ? state.innerActive.mode : outer;
+      if (!mode.indent) return CodeMirror.Pass;
+      return mode.indent(state.innerActive ? state.inner : state.outer, textAfter);
+    },
+
+    blankLine: function(state) {
+      var mode = state.innerActive ? state.innerActive.mode : outer;
+      if (mode.blankLine) {
+        mode.blankLine(state.innerActive ? state.inner : state.outer);
+      }
+      if (!state.innerActive) {
+        for (var i = 0; i < others.length; ++i) {
+          var other = others[i];
+          if (other.open === "\n") {
+            state.innerActive = other;
+            state.inner = CodeMirror.startState(other.mode, mode.indent ? mode.indent(state.outer, "") : 0);
+          }
+        }
+      } else if (state.innerActive.close === "\n") {
+        state.innerActive = state.inner = null;
+      }
+    },
+
+    electricChars: outer.electricChars,
+
+    innerMode: function(state) {
+      return state.inner ? {state: state.inner, mode: state.innerActive.mode} : {state: state.outer, mode: outer};
+    }
+  };
+};
+
 });
 
 

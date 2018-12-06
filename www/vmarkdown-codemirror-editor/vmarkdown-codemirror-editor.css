@@ -69,4 +69,9 @@
     font-weight: bold; }
   .CodeMirror.cm-s-vmarkdown .cm-link {
     text-decoration: none; }
+  .CodeMirror.cm-s-vmarkdown .cm-toc {
+    color: rgba(139, 158, 177, 0.8);
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #FFAA33; }
 
