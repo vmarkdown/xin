@@ -7,7 +7,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const AssetsPlugin = require('assets-webpack-plugin');
 const pac = require('./package.json');
 
-const plugins = require('./www/vremark/plugins.json');
+// const plugins = require('./www/vremark/plugins.json');
 const assets = require('./bin/assets');
 
 const minify = production? {
@@ -28,8 +28,12 @@ const config = {
     },
     resolve: {
         alias: {
-            'vmarkdown': path.resolve(__dirname, 'www', assets['vmarkdown'].js ),
-            'vremark-plugin-manager': path.resolve(__dirname, 'www/vremark', 'vremark-plugin-manager.min.js'),
+            // 'vmarkdown': path.resolve(__dirname, 'www', assets['vmarkdown'].js ),
+            // 'vremark-plugin-manager': path.resolve(__dirname, 'www/vremark', 'vremark-plugin-manager.min.js'),
+
+            'vmarkdown-parse': path.resolve(__dirname, 'www', 'vmarkdown/vmarkdown-parse.js' ),
+            'vmarkdown-render': path.resolve(__dirname, 'www', 'vmarkdown/vmarkdown-render.js' ),
+
         }
     },
     module: {
@@ -82,7 +86,7 @@ const config = {
                 NODE_ENV: JSON.stringify(process.env.NODE_ENV)
             },
             'VERSION': JSON.stringify(pac.version),
-            '__plugins__': JSON.stringify(plugins),
+            // '__plugins__': JSON.stringify(plugins),
             // 'VERSION': JSON.stringify(pac.version + ':' +new Date())
         }),
 
@@ -155,7 +159,7 @@ module.exports = [
                 minify: minify,
                 templateParameters: {
                     production: production,
-                    plugins: JSON.stringify(require('./www/vremark/plugins.json')),
+                    // plugins: JSON.stringify(require('./www/vremark/plugins.json')),
                     assets: assets
                 }
             }),

@@ -2,6 +2,23 @@ require('./index.scss');
 
 require('./split');
 
+(function (store) {
+
+
+
+
+
+
+
+
+
+})(window.store);
+
+
+
+
+
+/*
 const store = window.store;
 
 function loadIFrame(id, src) {
@@ -39,4 +56,4 @@ Promise.all([
 (async function () {
 
 })();
-
+*/

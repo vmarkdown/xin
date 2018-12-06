@@ -1,6 +1,53 @@
 require('./themes/github.default.theme.css');
 require('./index.scss');
 
+import Vue from 'vue';
+
+function init(store, PreviewComponent, VMarkdown) {
+
+    const Preview = Vue.extend(PreviewComponent);
+
+    const preview = new Preview({
+        el: '#app',
+        scrollContainer: window
+    });
+
+    const vmarkdown = new VMarkdown({
+        h: preview.$createElement
+    });
+
+    store.$on('change', async function (vast) {
+        const vdom = await vmarkdown.process(vast);
+        preview.setValue(vdom);
+    });
+    store.$on('scrollTo', function (options) {
+        preview.scrollTo(options);
+    });
+    store.$on('cursorChange', function (options) {
+        preview.activeTo(options);
+    });
+
+}
+
+window.onload = function () {
+    init(
+        window.top.store || {$on: function () {},$emit: function () {}},
+        VMarkDownPreview,
+        VMarkdownRender.default,
+    );
+};
+
+
+
+
+
+
+
+
+
+
+
+/*
 const plugins = require('./plugins');
 
 const store = window.top.store || {$on: function () {},$emit: function () {}};
@@ -105,3 +152,4 @@ const app = new Vue({
 // $('#print').on('click', function () {
 //     window.print();
 // });
+*/

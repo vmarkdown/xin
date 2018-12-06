@@ -4,67 +4,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <title>xin markdown editor</title>
+
+    <% if(production){ %>
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?4541251b6af03bc203fd47f1d8a74f70";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    <% } %>
+
+    <script>
+        var store = (function store() {
+
+            var Event = function () {
+            };
+
+            Event.prototype = {
+                $on: function (event, fct) {
+                    this._events = this._events || {};
+                    this._events[event] = this._events[event] || [];
+                    this._events[event].push(fct);
+                },
+                $off: function (event, fct) {
+                    this._events = this._events || {};
+                    if (event in this._events === false) return;
+                    this._events[event].splice(this._events[event].indexOf(fct), 1);
+                },
+                $emit: function (event /* , args... */) {
+                    this._events = this._events || {};
+                    if (event in this._events === false) return;
+                    for (var i = 0; i < this._events[event].length; i++) {
+                        this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1));
+                    }
+                }
+            };
+            Event.mixin = function (destObject) {
+                var props = ['$on', '$off', '$emit'];
+                for (var i = 0; i < props.length; i++) {
+                    if (typeof destObject === 'function') {
+                        destObject.prototype[props[i]] = Event.prototype[props[i]];
+                    } else {
+                        destObject[props[i]] = Event.prototype[props[i]];
+                    }
+                }
+                return destObject;
+            };
+
+            return new Event();
+
+        })();
+    </script>
 </head>
 <body>
-
-<script>
-    var store = (function store() {
-
-        var Event = function () {
-        };
-
-        Event.prototype = {
-            $on: function (event, fct) {
-                this._events = this._events || {};
-                this._events[event] = this._events[event] || [];
-                this._events[event].push(fct);
-            },
-            $off: function (event, fct) {
-                this._events = this._events || {};
-                if (event in this._events === false) return;
-                this._events[event].splice(this._events[event].indexOf(fct), 1);
-            },
-            $emit: function (event /* , args... */) {
-                this._events = this._events || {};
-                if (event in this._events === false) return;
-                for (var i = 0; i < this._events[event].length; i++) {
-                    this._events[event][i].apply(this, Array.prototype.slice.call(arguments, 1));
-                }
-            }
-        };
-        Event.mixin = function (destObject) {
-            var props = ['$on', '$off', '$emit'];
-            for (var i = 0; i < props.length; i++) {
-                if (typeof destObject === 'function') {
-                    destObject.prototype[props[i]] = Event.prototype[props[i]];
-                } else {
-                    destObject[props[i]] = Event.prototype[props[i]];
-                }
-            }
-            return destObject;
-        };
-
-        return new Event();
-
-    })();
-</script>
 
 <!--<div class="base-line"></div>-->
 <iframe id="editor" class="panel" frameborder="0" src="<%= editor %>"></iframe>
 <!--<div class="split-line"></div>-->
 <iframe id="preview" class="panel" frameborder="0" src="<%= preview %>"></iframe>
-
-<% if(production){ %>
-<script>
-    var _hmt = _hmt || [];
-    (function() {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?4541251b6af03bc203fd47f1d8a74f70";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-    })();
-</script>
-<% } %>
 
 </body>
 </html>

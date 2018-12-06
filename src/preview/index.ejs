@@ -32,20 +32,29 @@
             padding: 40px 40px 100vh 40px;
 
         }
+
+        body {
+            padding-top: 20px;
+            padding-right: 30px;
+            padding-left: 30px;
+        }
     </style>
+
+    <script src="<%= assets['vmarkdown-render'] %>"></script>
+    <script src="<%= assets['vmarkdown-preview-vendors'].js %>"></script>
+    <script src="<%= assets['vmarkdown-preview'].js %>"></script>
 
 </head>
 <body>
 
-<!--<div id="print"></div>-->
-<div id="preview">
-    <div class="preview-wrap">
-        <div id="app"></div>
-    </div>
-</div>
+<div id="app"></div>
 
-<script src="<%= assets['vmarkdown-preview-vendors'].js %>"></script>
-<script src="<%= assets['vmarkdown-preview'].js %>"></script>
+<!--<div id="print"></div>-->
+<!--<div id="preview">-->
+    <!--<div class="preview-wrap">-->
+        <!--<div id="app"></div>-->
+    <!--</div>-->
+<!--</div>-->
 
 </body>
 </html>

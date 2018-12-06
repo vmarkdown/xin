@@ -5,28 +5,32 @@ const files = dir.files(path.resolve(__dirname, '../www'), {sync:true});
 // console.log(files);
 
 const assets = {
+    'vmarkdown-parse': 'vmarkdown/vmarkdown-parse.js',
+    'vmarkdown-render': 'vmarkdown/vmarkdown-render.js',
+
     'vmarkdown': {
         js: '',
         css: '',
     },
     'vmarkdown-worker': {
-        js: '',
+        js: 'vmarkdown/vmarkdown.worker.js',
         css: '',
     },
     'vmarkdown-editor-vendors': {
-        js: '',
-        css: '',
+        js: 'vmarkdown-codemirror-editor/vmarkdown-codemirror-editor-vendors.js',
+        css: 'vmarkdown-codemirror-editor/vmarkdown-codemirror-editor-vendors.css',
     },
     'vmarkdown-editor': {
-        js: '',
-        css: '',
+        js: 'vmarkdown-codemirror-editor/vmarkdown-codemirror-editor.js',
+        css: 'vmarkdown-codemirror-editor/vmarkdown-codemirror-editor.css',
     },
     'vmarkdown-preview-vendors': {
-        js: '',
+        js: 'vmarkdown-preview/vmarkdown-preview-vendors.js',
+        css: 'vmarkdown-preview/vmarkdown-preview-vendors.css',
     },
     'vmarkdown-preview': {
-        js: '',
-        css: '',
+        js: 'vmarkdown-preview/vmarkdown-preview.js',
+        css: 'vmarkdown-preview/vmarkdown-preview.css',
     }
 };
 
