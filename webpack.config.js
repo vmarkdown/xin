@@ -35,6 +35,7 @@ const config = {
 
             'vmarkdown-parse': path.resolve(__dirname, 'www', 'vmarkdown/vmarkdown-parse.js' ),
             'vmarkdown-render': path.resolve(__dirname, 'www', 'vmarkdown/vmarkdown-render.js' ),
+            'vremark-plugins': path.resolve(__dirname, 'www', 'vremark/vremark-plugins.js' ),
 
         }
     },

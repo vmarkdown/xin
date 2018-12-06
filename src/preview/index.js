@@ -3,6 +3,10 @@ require('./index.scss');
 
 import Vue from 'vue';
 
+function register(component) {
+    Vue.component(component.name, component);
+}
+
 function init(store, PreviewComponent, VMarkdown) {
 
     const Preview = Vue.extend(PreviewComponent);
@@ -13,7 +17,9 @@ function init(store, PreviewComponent, VMarkdown) {
     });
 
     const vmarkdown = new VMarkdown({
-        h: preview.$createElement
+        h: preview.$createElement,
+        plugins: require('vremark-plugins'),
+        register: register
     });
 
     store.$on('change', async function (vast) {
