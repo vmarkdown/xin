@@ -1,6 +1,13 @@
 require('./index.scss');
+// require('./split');
 
-require('./split');
+require('photon/dist/css/photon.css');
+
+import Vue from 'vue';
+import Popover from 'vue-js-popover';
+Vue.use(Popover);
+
+import App from './app';
 
 (function (store) {
 
@@ -25,5 +32,11 @@ require('./split');
     ]).then(function () {
         store.$emit('ready');
     });
+
+    new Vue({
+        render(h) {
+            return h(App);
+        }
+    }).$mount('#app');
 
 })(window.store);

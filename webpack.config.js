@@ -6,6 +6,7 @@ const production = (process.env.NODE_ENV === 'production');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const AssetsPlugin = require('assets-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const pac = require('./package.json');
 
@@ -29,6 +30,7 @@ const config = {
         library: "[name]"
     },
     resolve: {
+        extensions: ['.js', '.vue', '.json', '.css', '.scss'],
         alias: {
             // 'vmarkdown': path.resolve(__dirname, 'www', assets['vmarkdown'].js ),
             // 'vremark-plugin-manager': path.resolve(__dirname, 'www/vremark', 'vremark-plugin-manager.min.js'),
@@ -52,6 +54,7 @@ const config = {
             {
                 test: /\.css$/,
                 use: [
+                    'vue-style-loader',
                     "style-loader",
                     "css-loader"
                 ]
@@ -59,10 +62,25 @@ const config = {
             {
                 test: /\.scss$/,
                 use: [
+                    'vue-style-loader',
                     "style-loader",
                     "css-loader",
                     "sass-loader"
                 ]
+            },
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader'
+            },
+            {
+                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+                use: {
+                    loader: 'url-loader',
+                    query: {
+                        limit: 10000,
+                        name: 'fonts/[name]--[folder].[ext]'
+                    }
+                }
             }
         ]
     },
@@ -86,13 +104,15 @@ const config = {
         new CleanWebpackPlugin(production?['dist']:[]),
         new webpack.DefinePlugin({
             'process.env': {
-                NODE_ENV: JSON.stringify(process.env.NODE_ENV)
+                NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+                PLATFORM_ENV: JSON.stringify(process.env.PLATFORM_ENV),
             },
             'VERSION': JSON.stringify(pac.version),
             // '__plugins__': JSON.stringify(plugins),
             // 'VERSION': JSON.stringify(pac.version + ':' +new Date())
         }),
-        new CopyWebpackPlugin(production?[{ from: 'www', to: './' }]:[])
+        new CopyWebpackPlugin(production?[{ from: 'www', to: './' }]:[]),
+        new VueLoaderPlugin()
     ],
     devServer: {
         // hotOnly: true,

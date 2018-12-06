@@ -3,9 +3,9 @@
   "version": "0.0.6",
   "description": "markdown editor.",
   "scripts": {
-    "dist": "NODE_ENV=production webpack -p -c webpack.config.js && node ./bin/replace.js",
+    "dist": "NODE_ENV=production PLATFORM_ENV=electron webpack -p -c webpack.config.js && node ./bin/replace.js",
     "build": "webpack -c webpack.config.js",
-    "dev": "webpack-dev-server",
+    "dev": "PLATFORM_ENV=browser webpack-dev-server",
     "test": "mocha test/**/*.js"
   },
   "repository": {
@@ -29,6 +29,7 @@
     "clean-webpack-plugin": "^1.0.0",
     "copy-webpack-plugin": "^4.6.0",
     "css-loader": "^1.0.0",
+    "file-loader": "^2.0.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^4.0.0-alpha.2",
     "node-dir": "^0.1.17",
@@ -36,6 +37,9 @@
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.0",
     "text-loader": "^0.0.1",
+    "url-loader": "^1.1.2",
+    "vue-loader": "^15.4.2",
+    "vue-template-compiler": "^2.5.17",
     "webpack": "^4.27.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.10",
@@ -44,7 +48,9 @@
   },
   "dependencies": {
     "lodash": "^4.17.11",
+    "photon": "git+https://github.com/connors/photon.git",
     "split.js": "^1.5.10",
-    "vue": "^2.5.17"
+    "vue": "^2.5.17",
+    "vue-js-popover": "^1.1.7"
   }
 }
