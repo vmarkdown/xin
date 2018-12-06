@@ -5,6 +5,8 @@ const webpack = require('webpack');
 const production = (process.env.NODE_ENV === 'production');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const AssetsPlugin = require('assets-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 const pac = require('./package.json');
 
 // const plugins = require('./www/vremark/plugins.json');
@@ -89,7 +91,7 @@ const config = {
             // '__plugins__': JSON.stringify(plugins),
             // 'VERSION': JSON.stringify(pac.version + ':' +new Date())
         }),
-
+        new CopyWebpackPlugin(production?[{ from: 'www', to: './' }]:[])
     ],
     devServer: {
         // hotOnly: true,
