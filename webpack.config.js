@@ -82,7 +82,7 @@ const config = {
         // 'vmarkdown': 'VMarkDown'
     },
     plugins: [
-        new CleanWebpackPlugin(production?['dist/*.*']:[]),
+        new CleanWebpackPlugin(production?['dist']:[]),
         new webpack.DefinePlugin({
             'process.env': {
                 NODE_ENV: JSON.stringify(process.env.NODE_ENV)
