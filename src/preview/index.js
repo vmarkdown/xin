@@ -27,13 +27,16 @@ function init(store, PreviewComponent, VMarkdown) {
         preview.activeTo(options);
     });
 
+
+    store.$emit('previewReady', true);
+
 }
 
 window.onload = function () {
     init(
         window.top.store || {$on: function () {},$emit: function () {}},
         VMarkDownPreview,
-        VMarkdownRender.default,
+        VMarkdownRender,
     );
 };
 

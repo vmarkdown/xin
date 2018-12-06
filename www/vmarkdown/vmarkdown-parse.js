@@ -354,5 +354,5 @@ module.exports = findNode;
 
 
 /***/ })
-/******/ ]);
+/******/ ])["default"];
 });
