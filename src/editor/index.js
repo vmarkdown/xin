@@ -96,6 +96,12 @@ function init(store, Editor, VMarkdown) {
         }
         editor.setValue(value);
     });
+
+
+    store.$on('execCommand', function ({name, options}) {
+        editor.execCommand(name, options);
+    });
+
 }
 
 window.onload = function () {

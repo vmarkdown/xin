@@ -206,9 +206,13 @@ __webpack_require__(12);
 __webpack_require__(13);
 __webpack_require__(14);
 
+__webpack_require__(15);
+__webpack_require__(16);
+
+
 
 // import Editor from './base/editor';
-const Editor = __webpack_require__(15);
+const Editor = __webpack_require__(17);
 
 // var deepClone = function (obj) {
 //     var _tmp,result;
@@ -217,7 +221,7 @@ const Editor = __webpack_require__(15);
 //     return result;
 // }
 
-const util = __webpack_require__(16);
+const util = __webpack_require__(18);
 
 // "text/markdown"
 CodeMirror.defineMode("vmarkdown", function(config, parserConfig) {
@@ -256,6 +260,84 @@ CodeMirror.defineMode("vmarkdown", function(config, parserConfig) {
 });
 
 
+
+(function () {
+
+    // const codemirror = CodeMirror(document.body, {
+    //     value: '// CodeMirror Addon hint/show-hint.js sample.\n// Snippets are Ctrl-E or Cmd-E.',
+    //     mode: 'text/javascript',
+    //     lineNumbers: true,
+    //     styleActiveLine: true,
+    //     theme: 'solarized dark'
+    // })
+    //
+    // // keymap を指定
+    // codemirror.setOption('extraKeys', {
+    //     'Cmd-E': function() {
+    //         snippet()
+    //     },
+    //     'Ctrl-E': function() {
+    //         snippet()
+    //     }
+    // })
+
+
+
+
+})();
+
+const SNIPPETS = {
+    TABLE: [
+        '\n',
+        '| Month    | Assignee | Backup |',
+        '| :------- | --------:| :----: |',
+        '| January  | Dave     | Steve  |',
+        '| February | Gregg    | Karen  |',
+        '| March    | Diane    | Jorge  |',
+        '\n',
+    ].join('\n'),
+    UNORDERED_LIST: [
+        '\n',
+        '- 1',
+        '- 2',
+        '- 3',
+        '- 4',
+        '\n',
+    ].join('\n'),
+    ORDERED_LIST: [
+        '\n',
+        '1. 1',
+        '2. 2',
+        '3. 3',
+        '4. 4',
+        '\n',
+    ].join('\n'),
+    TASK_LIST: [
+        '\n',
+        '- [x] 1',
+        '- [ ] 2',
+        '- [ ] 3',
+        '- [x] 4',
+        '\n',
+    ].join('\n'),
+    MATH_BLOCK: [
+        '\n',
+        '$$',
+        '',
+        '$$',
+        '\n',
+    ].join('\n'),
+};
+
+
+const snippets = [
+    { text: SNIPPETS.TABLE, displayText: 'Table' },
+    { text: SNIPPETS.UNORDERED_LIST, displayText: 'Unordered List' },
+    { text: SNIPPETS.ORDERED_LIST, displayText: 'Ordered List' },
+    { text: SNIPPETS.TASK_LIST, displayText: 'Task List' },
+    { text: SNIPPETS.MATH_BLOCK, displayText: 'Math Block' },
+];
+
 class CodeMirrorEditor extends Editor {
 
     constructor(el, options) {
@@ -280,10 +362,39 @@ class CodeMirrorEditor extends Editor {
 
                 // pollInterval: 5000,
                 extraKeys: {
-                    "Enter": "newlineAndIndentContinueMarkdownList"
+                    "Enter": "newlineAndIndentContinueMarkdownList",
+                    // "Cmd-B": function(){
+                    //     self.execCommand('strong');
+                    // }
+                    "Cmd-E": function(){
+                        snippet();
+                    }
                 }
             }, self.options)
         );
+
+
+        function snippet() {
+            const codemirror = self.editor;
+            CodeMirror.showHint(codemirror, function () {
+                const cursor = codemirror.getCursor();
+                const token = codemirror.getTokenAt(cursor);
+                const start = token.start;
+                const end = cursor.ch;
+                const line = cursor.line;
+                const currentWord = token.string;
+                const list = snippets.filter(function (item) {
+                    return item.text.indexOf(currentWord) >= 0
+                });
+                return {
+                    list: list.length ? list : snippets,
+                    from: CodeMirror.Pos(line, start),
+                    to: CodeMirror.Pos(line, end)
+                }
+            }, { completeSingle: false })
+        }
+
+
     }
 
     on(type, handler) {
@@ -589,6 +700,279 @@ class CodeMirrorEditor extends Editor {
 
     }
 
+    formatHeading({level}) {
+        const self = this;
+        const selections = self.editor.listSelections();
+        selections.forEach(function ({anchor}) {
+
+            const line = anchor.line;
+            let string = self.getLine(line+1);
+
+            const from = {
+                line: line,
+                ch: 0
+            };
+
+            const to = {
+                line: line,
+                ch: string.length
+            };
+
+            if(string) {
+                string = string.replace(/^#+[ ]{0,3}/,'');
+            }
+
+            let prefix = '#';
+
+            if(level===1){
+                prefix = '#';
+            }
+            else if(level===2){
+                prefix = '##';
+            }
+            else if(level===3){
+                prefix = '###';
+            }
+            else if(level===4){
+                prefix = '####';
+            }
+            else if(level===5){
+                prefix = '#####';
+            }
+            else if(level===6){
+                prefix = '######';
+            }
+
+            self.editor.replaceRange( prefix +' '+ string, from, to);
+        });
+    }
+
+    formatStrong() {
+        const self = this;
+        const selection = self.editor.getSelection();
+        self.editor.replaceSelection( '**'+ selection +'**' );
+    }
+
+    formatEmphasis() {
+        const self = this;
+        const selection = self.editor.getSelection();
+        self.editor.replaceSelection( '*'+ selection +'*' );
+    }
+
+    formatDelete() {
+        const self = this;
+        const selection = self.editor.getSelection();
+        self.editor.replaceSelection( '~~'+ selection +'~~' );
+    }
+
+    formatUnderline() {
+        const self = this;
+        self.editor.replaceSelection( '---' );
+    }
+
+    formatInlineCode() {
+        const self = this;
+        const selection = self.editor.getSelection();
+        self.editor.replaceSelection( '`'+ selection +'`' );
+    }
+
+    formatCode() {
+        const self = this;
+
+        const cursor = self.editor.getCursor();
+
+        const selection = self.editor.getSelection();
+
+        const string = [
+            '\n',
+            '``` ',
+            selection,
+            '```',
+            '\n',
+        ].join('\n');
+
+        self.editor.replaceSelection( string );
+
+        const position = {line: cursor.line+2, ch: 4};
+        self.editor.setCursor(position);
+    }
+
+    formatLink() {
+        const self = this;
+        const selection = self.editor.getSelection();
+        self.editor.replaceSelection( '['+ selection +']()' );
+    }
+
+    formatImage({url=''}) {
+        const self = this;
+        const selection = self.editor.getSelection();
+        self.editor.replaceSelection( '!['+ selection +']('+url+')' );
+    }
+
+    formatTable() {
+        const self = this;
+        const cursor = self.editor.getCursor();
+        const string = [
+            '\n',
+            '| Month    | Assignee | Backup |',
+            '| :------- | --------:| :----: |',
+            '| January  | Dave     | Steve  |',
+            '| February | Gregg    | Karen  |',
+            '| March    | Diane    | Jorge  |',
+            '\n',
+        ].join('\n');
+        self.editor.replaceRange(string, cursor, cursor);
+    }
+
+
+    formatThematicBreak() {
+        const self = this;
+        const cursor = self.editor.getCursor();
+
+        const string = [
+            '',
+            '***',
+            '',
+        ].join('\n');
+
+        self.editor.replaceRange(string, cursor, cursor);
+    }
+
+    formatBlockquote() {
+        const self = this;
+        const selections = self.editor.listSelections();
+        selections.forEach(function ({anchor}) {
+
+            const line = anchor.line;
+            let string = self.getLine(line+1);
+
+            const from = {
+                line: line,
+                ch: 0
+            };
+
+            const to = {
+                line: line,
+                ch: string.length
+            };
+
+            let prefix = '>';
+            self.editor.replaceRange( prefix +' '+ string, from, to);
+        });
+    }
+
+    formatList({ordered=false, checked=false}) {
+        const self = this;
+        const selections = self.editor.listSelections();
+        selections.forEach(function ({anchor, head}) {
+
+            const fromLine = anchor.line;
+            const toLine = head.line;
+
+            let index = 0;
+
+            for(let i=fromLine;i<=toLine;i++){
+
+                const line = i;
+                let string = self.getLine(line+1);
+
+                if(!string){
+                    continue;
+                }
+
+                const from = {
+                    line: line,
+                    ch: 0
+                };
+
+                const to = {
+                    line: line,
+                    ch: string.length
+                };
+
+                let prefix = '-';
+
+                if(ordered) {
+                    // prefix = (++index) + '. ';
+                    prefix = '1. ';
+                }
+                else if(checked){
+                    prefix = '- [ ] ';
+                }
+
+                self.editor.replaceRange( prefix +' '+ string, from, to);
+
+            }
+
+
+        });
+    }
+
+    execCommand(name, options = {}) {
+        const self = this;
+        switch (name) {
+            case 'heading': {
+                self.formatHeading(options);
+                break;
+            }
+            case 'strong': {
+                self.formatStrong();
+                break;
+            }
+            case 'emphasis': {
+                self.formatEmphasis();
+                break;
+            }
+            case 'delete': {
+                self.formatDelete();
+                break;
+            }
+            case 'underline': {
+                self.formatUnderline();
+                break;
+            }
+            case 'inlineCode': {
+                self.formatInlineCode();
+                break;
+            }
+            case 'code': {
+                self.formatCode();
+                break;
+            }
+            case 'link': {
+                self.formatLink();
+                break;
+            }
+            case 'image': {
+                self.formatImage(options);
+                break;
+            }
+            case 'table': {
+                self.formatTable(options);
+                break;
+            }
+            case 'thematicBreak': {
+                self.formatThematicBreak(options);
+                break;
+            }
+            case 'blockquote': {
+                self.formatBlockquote(options);
+                break;
+            }
+            case 'list': {
+                self.formatList(options);
+                break;
+            }
+            default: {
+
+            }
+        }
+
+    }
+
+
+
+
 }
 
 module.exports = CodeMirrorEditor;
@@ -606,7 +990,9 @@ module.exports = CodeMirrorEditor;
 /* 12 */,
 /* 13 */,
 /* 14 */,
-/* 15 */
+/* 15 */,
+/* 16 */,
+/* 17 */
 /***/ (function(module, exports) {
 
 // import Emitter from './emitter';
@@ -644,7 +1030,7 @@ class Editor {
 module.exports = Editor;
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ (function(module, exports) {
 
 module.exports = {

@@ -11,6 +11,12 @@ import App from './app';
 
 (function (store) {
 
+    Vue.mixin({
+        beforeCreate(){
+            this.$store = store;
+        }
+    });
+
     function previewReady() {
         return new Promise(function (resolve, reject) {
             store.$on('previewReady', function () {
