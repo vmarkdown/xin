@@ -39,7 +39,7 @@ function init(store, PreviewComponent, VMarkdown) {
     store.$emit('previewReady', true);
 
     store.$on('print', function () {
-      $('#preview').printThis({
+      $('.vmarkdown-preview .vremark-root').printThis({
             pageTitle: "",
             importCSS: true,
             importStyle: true
