@@ -21,8 +21,12 @@
 
         <!-- .toolbar-header sits at the top of your app -->
         <header class="toolbar toolbar-header">
-            <!--<h1 class="title">Photon</h1>-->
-            <div style="height: 5px;"></div>
+            <template v-if="PLATFORM_ENV === 'electron'">
+                <h1 class="title">xin markdown editor</h1>
+            </template>
+            <template v-else>
+                <div style="height: 5px;"></div>
+            </template>
 
             <div class="toolbar-actions">
                 <div class="btn-group" v-show="(viewStatus === VIEW_STATUS.ALL)||(viewStatus === VIEW_STATUS.EDITOR)">

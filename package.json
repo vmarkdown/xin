@@ -3,9 +3,12 @@
   "version": "0.0.6",
   "description": "markdown editor.",
   "scripts": {
-    "dist": "NODE_ENV=production PLATFORM_ENV=electron webpack -p -c webpack.config.js && node ./bin/replace.js",
+    "dist": "NODE_ENV=production PLATFORM_ENV=browser webpack -p -c webpack.config.js && node ./bin/replace.js",
+    "dist:electron": "NODE_ENV=production PLATFORM_ENV=electron webpack -p -c webpack.config.js && node ./bin/replace.js",
+
     "build": "webpack -c webpack.config.js",
     "dev": "PLATFORM_ENV=browser webpack-dev-server",
+    "dev:electron": "PLATFORM_ENV=electron webpack-dev-server",
     "test": "mocha test/**/*.js"
   },
   "repository": {
