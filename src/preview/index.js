@@ -1,6 +1,9 @@
 require('./themes/github.default.theme.css');
 require('./index.scss');
 
+const $ = require('jquery');
+require('printThis');
+
 import Vue from 'vue';
 
 function register(component) {
@@ -33,9 +36,15 @@ function init(store, PreviewComponent, VMarkdown) {
         preview.activeTo(options);
     });
 
-
     store.$emit('previewReady', true);
 
+    store.$on('print', function () {
+      $('#preview').printThis({
+            pageTitle: "",
+            importCSS: true,
+            importStyle: true
+        });
+    });
 }
 
 window.onload = function () {

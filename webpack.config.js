@@ -56,6 +56,12 @@ const config = {
                 use: [
                     'vue-style-loader',
                     "style-loader",
+                    // {
+                    //     loader: 'style-loader',
+                    //     options: {
+                    //         insertInto: 'body'
+                    //     }
+                    // },
                     "css-loader"
                 ]
             },
@@ -101,6 +107,10 @@ const config = {
         // 'vmarkdown': 'VMarkDown'
     },
     plugins: [
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery"
+        }),
         new CleanWebpackPlugin(production?['dist']:[]),
         new webpack.DefinePlugin({
             'process.env': {

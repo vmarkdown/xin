@@ -90,6 +90,9 @@
 
                 </div>
 
+                <button class="btn btn-default pull-right" @click="print">
+                    <span class="icon icon-print"></span>
+                </button>
 
                 <button class="btn btn-default pull-right" @click="switchView">
 
@@ -149,6 +152,9 @@
             }
         },
         methods:{
+            print(){
+                this.$store.$emit('print');
+            },
             switchView() {
                 this.viewStatus = (this.viewStatus+1)%2;
             },
