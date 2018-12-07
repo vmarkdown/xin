@@ -25,21 +25,25 @@ console.log(editorName);
 fs.renameSync('./dist/'+editor.html,'./dist/'+editorName);
 
 // console.log(html);
+// var html = index
+//     .replace('src="preview.html"', 'src="'+previewName+'"')
+//     .replace('src="editor.html"', 'src="'+editorName+'"');
+
 var html = index
-    .replace('src="preview.html"', 'src="'+previewName+'"')
-    .replace('src="editor.html"', 'src="'+editorName+'"');
+    .replace('[%%=preview=%%]', previewName)
+    .replace('[%%=editor=%%]', editorName);
 
 fs.writeFileSync(path.resolve(__dirname,'../dist','index.html'), html);
 
 
 
-fs.unlink('./dist/editor.json', function (err) {
-    if (err) return console.log(err);
-    console.log('editor.json remove success');
-});
-
-fs.unlink('./dist/preview.json', function (err) {
-    if (err) return console.log(err);
-    console.log('preview.json remove success');
-});
+// fs.unlink('./dist/editor.json', function (err) {
+//     if (err) return console.log(err);
+//     console.log('editor.json remove success');
+// });
+//
+// fs.unlink('./dist/preview.json', function (err) {
+//     if (err) return console.log(err);
+//     console.log('preview.json remove success');
+// });
 

@@ -107,10 +107,10 @@
         <div class="window-content">
             <div class="pane-group">
                 <div class="pane" v-show="(viewStatus === VIEW_STATUS.ALL)||(viewStatus === VIEW_STATUS.EDITOR)">
-                    <iframe class="panel" frameborder="0" src="editor.html"></iframe>
+                    <iframe class="panel" frameborder="0" :src="editorUrl"></iframe>
                 </div>
                 <div class="pane" v-show="(viewStatus === VIEW_STATUS.ALL)||(viewStatus === VIEW_STATUS.PREVIEW)">
-                    <iframe class="panel" frameborder="0" src="preview.html"></iframe>
+                    <iframe class="panel" frameborder="0" :src="previewUrl"></iframe>
                 </div>
             </div>
         </div>
@@ -130,6 +130,16 @@
     };
 
     export default {
+        props:{
+            editorUrl:{
+                type: String,
+                default: 'editor.html'
+            },
+            previewUrl:{
+                type: String,
+                default: 'preview.html'
+            }
+        },
         data () {
             return {
                 VIEW_STATUS: VIEW_STATUS,

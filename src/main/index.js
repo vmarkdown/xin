@@ -11,6 +11,12 @@ import App from './app';
 
 (function (store) {
 
+    const editorUrl = document.getElementById('editor').innerText;
+    const previewUrl = document.getElementById('preview').innerText;
+
+
+
+
     Vue.mixin({
         beforeCreate(){
             this.$store = store;
@@ -41,7 +47,12 @@ import App from './app';
 
     new Vue({
         render(h) {
-            return h(App);
+            return h(App, {
+                props:{
+                    editorUrl: editorUrl,
+                    previewUrl: previewUrl
+                }
+            });
         }
     }).$mount('#app');
 
