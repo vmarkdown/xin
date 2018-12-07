@@ -20,7 +20,7 @@
         </popover>
 
         <!-- .toolbar-header sits at the top of your app -->
-        <header class="toolbar toolbar-header">
+        <header class="toolbar toolbar-header draggable">
             <template v-if="PLATFORM_ENV === 'electron'">
                 <h1 class="title">xin markdown editor</h1>
             </template>
