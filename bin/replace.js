@@ -36,14 +36,13 @@ var html = index
 fs.writeFileSync(path.resolve(__dirname,'../dist','index.html'), html);
 
 
+fs.unlink('./dist/editor.json', function (err) {
+    if (err) return console.log(err);
+    console.log('editor.json remove success');
+});
 
-// fs.unlink('./dist/editor.json', function (err) {
-//     if (err) return console.log(err);
-//     console.log('editor.json remove success');
-// });
-//
-// fs.unlink('./dist/preview.json', function (err) {
-//     if (err) return console.log(err);
-//     console.log('preview.json remove success');
-// });
+fs.unlink('./dist/preview.json', function (err) {
+    if (err) return console.log(err);
+    console.log('preview.json remove success');
+});
 
