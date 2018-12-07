@@ -221,8 +221,8 @@ module.exports = [
                 minify: minify,
                 templateParameters: {
                     production: production,
-                    editor: 'editor.html',
-                    preview: 'preview.html'
+                    editor: production?'<%= editor %>':'editor.html',
+                    preview: production?'<%= preview %>':'preview.html'
                 }
             })
         ]

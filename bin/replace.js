@@ -30,8 +30,8 @@ fs.renameSync('./dist/'+editor.html,'./dist/'+editorName);
 //     .replace('src="editor.html"', 'src="'+editorName+'"');
 
 var html = index
-    .replace('[%%=preview=%%]', previewName)
-    .replace('[%%=editor=%%]', editorName);
+    .replace('<%= preview %>', previewName)
+    .replace('<%= editor %>', editorName);
 
 fs.writeFileSync(path.resolve(__dirname,'../dist','index.html'), html);
 
